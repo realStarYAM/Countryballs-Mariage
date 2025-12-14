@@ -37,21 +37,35 @@ function buildImagePath(country, role) {
   return `Pays/${safeCountry}/heureux_${safeRole}.png`;
 }
 
-function setBallImage(img, src) {
+function setBallImage(img, src, fallbackAlt = "Image indisponible") {
   img.classList.remove("is-visible");
-  img.onload = () => img.classList.add("is-visible");
-  img.onerror = () => {
-    img.alt = "Image indisponible";
-    img.classList.remove("is-visible");
-  };
-  img.src = src;
+  return new Promise((resolve) => {
+    img.onload = () => {
+      img.classList.add("is-visible");
+      resolve();
+    };
+    img.onerror = () => {
+      img.alt = fallbackAlt;
+      img.classList.remove("is-visible");
+      resolve();
+    };
+    img.src = src;
+  });
 }
 
 function updateImages(country) {
-  setBallImage(elements.player, buildImagePath(country, "gauche"));
-  setBallImage(elements.partner, buildImagePath(country, "droite"));
+  const cleanedCountry = country.trim();
+  const playerPath = buildImagePath(cleanedCountry, "gauche");
+  const partnerPath = buildImagePath(cleanedCountry, "droite");
+
   elements.couplePanel.setAttribute("aria-busy", "true");
-  window.requestAnimationFrame(() => elements.couplePanel.removeAttribute("aria-busy"));
+
+  Promise.all([
+    setBallImage(elements.player, playerPath, "Image joueur indisponible"),
+    setBallImage(elements.partner, partnerPath, "Image partenaire indisponible"),
+  ]).finally(() => {
+    elements.couplePanel.removeAttribute("aria-busy");
+  });
 }
 
 function onCountryChange(event) {
