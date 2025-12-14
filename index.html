@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countryballs Mariage</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="hero__accent"></div>
+      <div>
+        <p class="tag">Dark premium</p>
+        <h1>Countryballs Mariage</h1>
+        <p class="subtitle">Choisissez votre duo préféré et célébrez l'amour multinationale.</p>
+      </div>
+      <div class="hero__controls">
+        <button id="themeToggle" class="chip" aria-label="Basculer le mode sombre">Mode sombre : ON</button>
+        <div class="select-wrap">
+          <label for="countrySelect">Pays</label>
+          <select id="countrySelect" aria-label="Sélection du pays">
+            <option value="France">France</option>
+            <option value="Belgique">Belgique</option>
+            <option value="Italie">Italie</option>
+            <option value="Espagne">Espagne</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Pologne">Pologne</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" aria-label="Zone Couple">
+        <div class="card__header">
+          <h2>Couple</h2>
+          <p class="hint">Les amoureux du pays choisi apparaissent ci-dessous.</p>
+        </div>
+        <div class="couple" id="couplePanel">
+          <div class="avatar">
+            <div class="avatar__frame">
+              <img id="playerImage" src="" alt="Joueur" />
+            </div>
+            <p class="legend">Joueur</p>
+          </div>
+          <div class="avatar">
+            <div class="avatar__frame">
+              <img id="partnerImage" src="" alt="Partenaire" />
+            </div>
+            <p class="legend">Partenaire</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
