@@ -38,14 +38,18 @@ function buildImagePath(country, role) {
 }
 
 function setBallImage(img, src, fallbackAlt = "Image indisponible") {
+  // Réinitialise l'état et prépare l'accessibilité avant le chargement
   img.classList.remove("is-visible");
+  img.alt = fallbackAlt;
+
   img.onload = () => {
     img.classList.add("is-visible");
   };
+
   img.onerror = () => {
-    img.alt = fallbackAlt;
     img.classList.remove("is-visible");
   };
+
   img.src = src;
 }
 
