@@ -3,6 +3,13 @@ const COUNTRIES = ["France", "Belgique", "Italie", "Espagne", "Portugal", "Polog
 const STORAGE_KEYS = {
   country: "countryballs-pays",
   theme: "countryballs-theme",
+  nameLeft: "cb_name_left",
+  nameRight: "cb_name_right",
+};
+
+const NAME_DEFAULTS = {
+  left: "Joueur",
+  right: "Partenaire",
 };
 
 const elements = {
@@ -21,6 +28,8 @@ const elements = {
 
 const defaultCountry = COUNTRIES[0];
 const levelCache = new Map();
+
+const sanitizeName = (value, fallback) => (value && value.trim() ? value.trim() : fallback);
 
 const getSavedTheme = () => localStorage.getItem(STORAGE_KEYS.theme);
 const getSavedCountry = () => localStorage.getItem(STORAGE_KEYS.country);
@@ -60,6 +69,33 @@ function calculateLevel(country) {
   return level;
 }
 
+function saveName(side, value) {
+  const isRight = side === "right";
+  const key = isRight ? STORAGE_KEYS.nameRight : STORAGE_KEYS.nameLeft;
+  const fallback = isRight ? NAME_DEFAULTS.right : NAME_DEFAULTS.left;
+  const safeValue = sanitizeName(value, fallback);
+  localStorage.setItem(key, safeValue);
+
+  const target = isRight ? elements.partnerName : elements.playerName;
+  if (target) {
+    target.value = safeValue;
+  }
+}
+
+function loadNames() {
+  const savedLeft = localStorage.getItem(STORAGE_KEYS.nameLeft);
+  const savedRight = localStorage.getItem(STORAGE_KEYS.nameRight);
+
+  const leftName = sanitizeName(savedLeft, NAME_DEFAULTS.left);
+  const rightName = sanitizeName(savedRight, NAME_DEFAULTS.right);
+
+  elements.playerName.value = leftName;
+  elements.partnerName.value = rightName;
+
+  localStorage.setItem(STORAGE_KEYS.nameLeft, leftName);
+  localStorage.setItem(STORAGE_KEYS.nameRight, rightName);
+}
+
 function setBallImage(imgEl, country, role, label) {
   const src = buildImagePath(country, role);
 
@@ -93,9 +129,6 @@ function updateImages(country) {
 function updateIDCards(country) {
   const safeCountry = country || defaultCountry;
   const level = calculateLevel(safeCountry);
-
-  elements.playerName.textContent = "Joueur";
-  elements.partnerName.textContent = "Partenaire";
 
   elements.playerCountry.textContent = safeCountry;
   elements.partnerCountry.textContent = safeCountry;
@@ -137,6 +170,10 @@ function init() {
   // Peu d'éléments mais on garde la fonction pour évoluer facilement
   elements.select.addEventListener("change", onCountryChange);
   elements.themeToggle.addEventListener("click", toggleTheme);
+  elements.playerName.addEventListener("input", (event) => saveName("left", event.target.value));
+  elements.partnerName.addEventListener("input", (event) => saveName("right", event.target.value));
+
+  loadNames();
   hydrateUI();
 }
 
