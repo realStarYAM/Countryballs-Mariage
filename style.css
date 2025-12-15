@@ -311,6 +311,11 @@ select {
     outline: none;
 }
 
+select option {
+    color: #0f172a;
+    background-color: #f8fafc;
+}
+
 button {
     background: var(--accent);
     color: white;
