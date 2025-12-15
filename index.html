@@ -165,6 +165,13 @@
                     <label>Titre</label>
                     <span id="player-title" style="color:var(--accent);">Débutant</span>
                 </div>
+                <div class="id-field ring-row">
+                    <div>
+                        <label>Anneau équipé</label>
+                        <div id="player-ring-display" class="ring-display">Aucun anneau</div>
+                    </div>
+                    <button class="ghost-btn" data-side="player" onclick="openRingModal('player')">Choisir anneau</button>
+                </div>
             </article>
 
             <!-- PARTENAIRE -->
@@ -206,6 +213,13 @@
                 <div class="id-field">
                     <label>Titre</label>
                     <span id="partner-title" style="color:var(--accent);">Débutant</span>
+                </div>
+                <div class="id-field ring-row">
+                    <div>
+                        <label>Anneau équipé</label>
+                        <div id="partner-ring-display" class="ring-display">Aucun anneau</div>
+                    </div>
+                    <button class="ghost-btn" data-side="partner" onclick="openRingModal('partner')">Choisir anneau</button>
                 </div>
             </article>
         </section>
@@ -253,6 +267,16 @@
     </div>
     <div id="export-flash" class="export-flash"></div>
     <canvas id="export-canvas" style="display:none;"></canvas>
+
+    <div id="ring-modal" class="ring-modal hidden" role="dialog" aria-modal="true" aria-label="Sélection d'anneau">
+        <div class="ring-modal-content">
+            <div class="ring-modal-header">
+                <h3>Anneaux du Destin</h3>
+                <button class="ghost-btn" id="close-ring-modal">✕</button>
+            </div>
+            <div id="ring-inventory" class="ring-inventory"></div>
+        </div>
+    </div>
 
     <script src="game.js"></script>
 </body>
