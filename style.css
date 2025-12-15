@@ -27,6 +27,30 @@ body.light-mode {
     --text-muted: #64748b;
 }
 
+body[data-theme="dragonball"] {
+    --accent: #f97316;
+    --rank-beginner: #fb923c;
+    --rank-intermediate: #facc15;
+    --rank-expert: #fbbf24;
+    --rank-legend: #f97316;
+}
+
+body[data-theme="onepiece"] {
+    --accent: #0ea5e9;
+    --rank-beginner: #22d3ee;
+    --rank-intermediate: #fcd34d;
+    --rank-expert: #38bdf8;
+    --rank-legend: #f43f5e;
+}
+
+body[data-theme="naruto"] {
+    --accent: #ef4444;
+    --rank-beginner: #f97316;
+    --rank-intermediate: #fb923c;
+    --rank-expert: #a855f7;
+    --rank-legend: #f43f5e;
+}
+
 body {
     background: var(--bg);
     color: var(--text);
@@ -55,6 +79,35 @@ body {
 header {
     text-align: center;
     margin-bottom: 40px;
+}
+
+.theme-selector {
+    max-width: 960px;
+    margin: 0 auto 30px;
+}
+
+.theme-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.theme-card h2 {
+    margin: 4px 0 0;
+}
+
+.theme-kicker {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
 }
 
 h1 {
@@ -172,7 +225,8 @@ h1 {
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
-    align-items: center;
+    align-items: flex-start;
+    gap: 12px;
 }
 
 input,
@@ -197,6 +251,32 @@ button {
 
 button:hover {
     filter: brightness(1.1);
+}
+
+.name-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.name-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ai-name-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    border: 1px solid var(--border);
+}
+
+.name-actions small {
+    color: var(--text-muted);
+    font-size: 0.8rem;
 }
 
 button.danger {
@@ -376,5 +456,14 @@ svg {
 
     .heart-icon {
         transform: rotate(90deg);
+    }
+
+    .theme-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .theme-card select {
+        width: 100%;
     }
 }

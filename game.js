@@ -13,6 +13,13 @@ const CONFIG = {
     EVENT_COOLDOWN: 10000 // 10s
 };
 
+const THEMES = {
+    classique: { icon: '❤️', vibe: 'Classique' },
+    dragonball: { icon: '⭐️', vibe: 'Dragon Ball' },
+    onepiece: { icon: '☠️', vibe: 'One Piece' },
+    naruto: { icon: '🌀', vibe: 'Naruto' }
+};
+
 const XP_REWARDS = {
     COUNTRY_CHANGE: 10,
     NAME_CHANGE: 5,
@@ -42,6 +49,34 @@ const COUNTRY_DATA = {
     'Russie': { continent: 'Europe', neighbors: ['Ukraine', 'Pologne'] },
     'Tunisie': { continent: 'Afrique', neighbors: ['Algérie'] },
     'Ukraine': { continent: 'Europe', neighbors: ['Pologne', 'Russie'] }
+};
+
+const NAME_SETS = {
+    Afrique: {
+        prefixes: ['Aï', 'Ma', 'Is', 'Na', 'Ka', 'Sa', 'Ti', 'Sou', 'Ya', 'Za', 'Rya', 'Lya', 'Aya', 'Hani', 'Amel', 'Bahi', 'Zin', 'Mal', 'Lam', 'Nour'],
+        middles: ['ra', 'ya', 'la', 'ma', 'di', 'ni', 'ss', 'dou', 'nou', 'fi', 'ri', 'ta', 'li', 'zi', 'zou', 'zra', 'dra', 'han', 'kh', 'zen'],
+        suffixes: ['a', 'ine', 'iya', 'ya', 'an', 'el', 'ou', 'ia', 'ane', 'enne', 'i', 'us', 'is', 'ar', 'al', 'ène', 'aya', 'iri', 'oun', 'ette']
+    },
+    Europe: {
+        prefixes: ['El', 'Mar', 'An', 'Lil', 'Jo', 'Na', 'Lu', 'Theo', 'Is', 'Vic', 'Ale', 'Leo', 'Alba', 'Max', 'Sof', 'Chi', 'Adr', 'Eva', 'Ine', 'Rom'],
+        middles: ['en', 'ie', 'an', 'la', 'ri', 'lo', 'ta', 're', 'za', 'do', 'li', 'to', 'se', 'na', 'va', 'ca', 'ri', 'no', 'ga', 'lu'],
+        suffixes: ['a', 'o', 'e', 'i', 'us', 'ine', 'ette', 'io', 'ia', 'él', 'el', 'ine', 'ien', 'ès', 'isse', 'on', 'as', 'or', 'ès', 'ine']
+    },
+    Asie: {
+        prefixes: ['Haru', 'Mina', 'Aya', 'Sora', 'Ken', 'Yuna', 'Akira', 'Nao', 'Toru', 'Rin', 'Chen', 'Li', 'Yue', 'Kai', 'Mei', 'Suki', 'Da', 'Jun', 'Ren', 'Hina'],
+        middles: ['mi', 'na', 'ri', 'ko', 'ta', 'ya', 'ji', 'an', 'shi', 'ra', 'yu', 'ho', 'li', 'mei', 'rei', 'no', 'ki', 'zu', 'to', 'sa'],
+        suffixes: ['ko', 'shi', 'ta', 'ya', 'ji', 'na', 'ra', 'yu', 'li', 'an', 'lin', 'ren', 'hua', 'mei', 'ta', 'so', 'zen', 'do', 'sai', 'rin']
+    },
+    Amérique: {
+        prefixes: ['Ava', 'Mia', 'Liam', 'Noa', 'Santi', 'Luz', 'Amar', 'Nova', 'Léo', 'Mateo', 'Gael', 'Sara', 'Luca', 'Mila', 'Rosa', 'Elio', 'Noel', 'Ana', 'Cam', 'Rio'],
+        middles: ['ri', 'la', 'ro', 'na', 'mi', 'ta', 'do', 'le', 'ri', 'za', 'li', 'jo', 'sa', 'ne', 'te', 'lu', 'ma', 'ca', 'ra', 'vi'],
+        suffixes: ['a', 'o', 'e', 'el', 'ia', 'ar', 'ez', 'ia', 'ito', 'ina', 'on', 'en', 'es', 'an', 'el', 'ia', 'iel', 'son', 's', 'ah']
+    },
+    Global: {
+        prefixes: ['Ar', 'El', 'Ka', 'No', 'Sa', 'Lu', 'Ya', 'Mi', 'Zo', 'Ra', 'Ha', 'Mo', 'Di', 'Fe', 'Ri', 'Ta', 'Vi', 'Ze', 'Oa', 'Li'],
+        middles: ['la', 'ra', 'ne', 'ri', 'to', 'na', 'li', 'mo', 'za', 'lo', 'mi', 'ya', 're', 'ka', 'si', 'te', 'no', 'fi', 'do', 'sa'],
+        suffixes: ['a', 'e', 'i', 'o', 'u', 'an', 'en', 'on', 'ar', 'el', 'er', 'is', 'us', 'ys', 'ine', 'iel', 'os', 'as', 'ae', 'or']
+    }
 };
 
 // Succès
@@ -74,7 +109,8 @@ let state = {
     unlocked: [],
     logs: [],
     lastEvent: 0,
-    compatBonus: 0
+    compatBonus: 0,
+    theme: 'classique'
 };
 
 // ==================== DOM SEARCH ====================
@@ -128,6 +164,7 @@ const ui = {
     resetBtn: $('reset-btn'),
     clearHistBtn: $('clear-history-btn'),
     themeToggle: $('theme-toggle'),
+    universeTheme: $('universe-theme'),
 
     // Export fx
     flash: $('export-flash'),
@@ -150,6 +187,14 @@ function getImgPath(country, side) {
     return country ? `Pays/${encodeURIComponent(country)}/heureux_${side}.PNG` : '';
 }
 
+function generateAiName(country) {
+    const continent = COUNTRY_DATA[country]?.continent;
+    const set = NAME_SETS[continent] || NAME_SETS.Global;
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const base = `${pick(set.prefixes)}${Math.random() > 0.5 ? pick(set.middles) : ''}${pick(set.suffixes)}`;
+    return base.charAt(0).toUpperCase() + base.slice(1);
+}
+
 function updateImg(img, src) {
     if (!src) { img.src = ''; img.classList.remove('loaded'); return; }
     const i = new Image();
@@ -163,6 +208,20 @@ function showToast(msg) {
     el.innerHTML = `<span>✨</span> <span>${msg}</span>`;
     ui.toast.appendChild(el);
     setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 500); }, 3000);
+}
+
+function applyTheme(themeKey, silent = false) {
+    const theme = THEMES[themeKey] || THEMES.classique;
+    state.theme = themeKey;
+    document.body.dataset.theme = themeKey;
+    ui.heart.textContent = theme.icon;
+    if (ui.universeTheme && ui.universeTheme.value !== themeKey) {
+        ui.universeTheme.value = themeKey;
+    }
+    if (!silent) {
+        save();
+        showToast(`Thème ${theme.vibe} activé`);
+    }
 }
 
 // ==================== CORE LOGIC ====================
@@ -331,8 +390,12 @@ function load() {
         renderAchievements();
         renderLogs();
 
+        applyTheme(state.theme || 'classique', true);
+
         // Load theme
         if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+    } else {
+        applyTheme(state.theme, true);
     }
 }
 
@@ -499,6 +562,17 @@ levelBtns.forEach(b => {
     };
 });
 
+document.querySelectorAll('.ai-name-btn').forEach(btn => {
+    btn.onclick = () => {
+        const target = btn.dataset.target;
+        const chosen = generateAiName(state[target].country);
+        state[target].name = chosen;
+        updateUI(target);
+        addXP(target, XP_REWARDS.NAME_CHANGE);
+        showToast(`Prénom IA choisi : ${chosen}`);
+    };
+});
+
 if (ui.eventBtn) ui.eventBtn.onclick = triggerEvent;
 if (ui.saveBtn) ui.saveBtn.onclick = addToHistory;
 if (ui.resetBtn) ui.resetBtn.onclick = () => {
@@ -527,6 +601,7 @@ ui.themeToggle.onclick = () => {
     document.body.classList.toggle('light-mode');
     localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 };
+if (ui.universeTheme) ui.universeTheme.onchange = (e) => applyTheme(e.target.value);
 
 // Init
 window.onload = load;
