@@ -1,162 +1,222 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countryballs Mariage</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Countryballs Mariage RPG</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <div class="app">
-    <header class="hero">
-      <div class="hero__accent"></div>
-      <div>
-        <p class="tag">Dark premium</p>
-        <h1>Countryballs Mariage</h1>
-        <p class="subtitle">Choisissez votre duo préféré et célébrez l'amour multinationale.</p>
-      </div>
-        <div class="hero__controls">
-          <button id="themeToggle" class="chip" aria-label="Basculer le mode sombre">Mode sombre : ON</button>
-          <div class="select-grid">
-            <div class="select-wrap">
-              <label for="countrySelectLeft">Pays Joueur (gauche)</label>
-              <select id="countrySelectLeft" aria-label="Sélection du pays joueur">
-                <option value="France">France</option>
-                <option value="Belgique">Belgique</option>
-                <option value="Italie">Italie</option>
-                <option value="Espagne">Espagne</option>
-                <option value="Portugal">Portugal</option>
-                <option value="Pologne">Pologne</option>
-              </select>
-            </div>
-            <div class="select-wrap">
-              <label for="countrySelectRight">Pays Partenaire (droite)</label>
-              <select id="countrySelectRight" aria-label="Sélection du pays partenaire">
-                <option value="France">France</option>
-                <option value="Belgique">Belgique</option>
-                <option value="Italie">Italie</option>
-                <option value="Espagne">Espagne</option>
-                <option value="Portugal">Portugal</option>
-                <option value="Pologne">Pologne</option>
-              </select>
-            </div>
-          </div>
+
+    <header>
+        <div class="theme-toggle-container" style="position: absolute; top: 20px; right: 20px;">
+            <button id="theme-toggle">🌙/☀️</button>
         </div>
+        <h1>Countryballs Mariage RPG</h1>
+        <p>Créez le couple international ultime !</p>
     </header>
 
     <main>
-      <section class="card" aria-label="Zone Couple">
-        <div class="card__header">
-          <h2>Couple</h2>
-          <p class="hint">Les amoureux du pays choisi apparaissent ci-dessous.</p>
-        </div>
-        <div class="couple" id="couplePanel">
-          <div class="avatar">
-            <div class="avatar__frame" id="playerFrame">
-              <div class="rank-badge" id="playerBadge" aria-hidden="true"></div>
-              <img id="playerImage" src="" alt="Joueur" />
+        <!-- 1. SÉLECTION -->
+        <section class="country-selectors">
+            <div class="selector-group">
+                <label>Pays Joueur</label>
+                <select id="player-country">
+                    <option value="">-- Choisir --</option>
+                    <option value="Algérie">Algérie</option>
+                    <option value="Allemagne">Allemagne</option>
+                    <option value="Belgique">Belgique</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Corée du Sud">Corée du Sud</option>
+                    <option value="Espagne">Espagne</option>
+                    <option value="États-Unis">États-Unis</option>
+                    <option value="France">France</option>
+                    <option value="Italie">Italie</option>
+                    <option value="Japon">Japon</option>
+                    <option value="Liban">Liban</option>
+                    <option value="Maroc">Maroc</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Palestine">Palestine</option>
+                    <option value="Pologne">Pologne</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Royaume-Uni">Royaume-Uni</option>
+                    <option value="Russie">Russie</option>
+                    <option value="Tunisie">Tunisie</option>
+                    <option value="Ukraine">Ukraine</option>
+                </select>
             </div>
-            <p class="legend">Joueur</p>
-          </div>
-          <div class="avatar">
-            <div class="avatar__frame" id="partnerFrame">
-              <div class="rank-badge" id="partnerBadge" aria-hidden="true"></div>
-              <img id="partnerImage" src="" alt="Partenaire" />
-            </div>
-            <p class="legend">Partenaire</p>
-          </div>
-        </div>
-      </section>
 
-      <section class="card id-section" aria-label="Cartes d'identité des countryballs">
-        <div class="card__header">
-          <h2>Cartes d'identité</h2>
-          <p class="hint">Noms, pays et niveaux sont synchronisés avec votre sélection.</p>
-        </div>
-
-        <div class="id-grid">
-          <article class="id-card" aria-label="Carte d'identité du joueur">
-            <div class="id-card__accent"></div>
-            <div class="id-card__header">
-              <p class="pill">Joueur · Gauche</p>
-              <span class="dot"></span>
+            <div class="heart-separator">
+                <span id="couple-heart" class="heart-icon">❤️</span>
             </div>
-            <div class="id-fields">
-              <div class="id-field">
-                <p class="id-label">Nom</p>
-                <input
-                  type="text"
-                  id="playerName"
-                  class="id-input"
-                  name="playerName"
-                  aria-label="Nom du joueur"
-                  autocomplete="off"
-                  spellcheck="false"
-                />
-              </div>
-              <div class="id-field">
-                <p class="id-label">Pays</p>
-                <p class="id-value" id="playerCountry">France</p>
-              </div>
-              <div class="id-field level-field">
-                <div class="level-row">
-                  <div>
-                    <p class="id-label">Niveau</p>
-                    <p class="id-value" id="playerLevel">-</p>
-                    <p class="rank-title" id="playerRankTitle">Débutant</p>
-                  </div>
-                  <div class="level-actions" aria-label="Contrôles de niveau joueur">
-                    <button class="level-btn" data-side="left" data-direction="down" aria-label="Diminuer le niveau du joueur">−</button>
-                    <button class="level-btn" data-side="left" data-direction="up" aria-label="Augmenter le niveau du joueur">+</button>
-                  </div>
+
+            <div class="selector-group">
+                <label>Pays Partenaire</label>
+                <select id="partner-country">
+                    <option value="">-- Choisir --</option>
+                    <option value="Algérie">Algérie</option>
+                    <option value="Allemagne">Allemagne</option>
+                    <option value="Belgique">Belgique</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Corée du Sud">Corée du Sud</option>
+                    <option value="Espagne">Espagne</option>
+                    <option value="États-Unis">États-Unis</option>
+                    <option value="France">France</option>
+                    <option value="Italie">Italie</option>
+                    <option value="Japon">Japon</option>
+                    <option value="Liban">Liban</option>
+                    <option value="Maroc">Maroc</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Palestine">Palestine</option>
+                    <option value="Pologne">Pologne</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Royaume-Uni">Royaume-Uni</option>
+                    <option value="Russie">Russie</option>
+                    <option value="Tunisie">Tunisie</option>
+                    <option value="Ukraine">Ukraine</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- COMPATIBILITÉ -->
+        <section id="compatibility-section" class="compatibility-section">
+            <div class="compatibility-circle">
+                <svg>
+                    <circle class="bg-circle" cx="60" cy="60" r="54" stroke="var(--border)" fill="none"
+                        stroke-width="8"></circle>
+                    <circle id="progress-circle" class="progress-circle" cx="60" cy="60" r="54"></circle>
+                </svg>
+                <div class="compatibility-value"><span id="compatibility-percent">0</span>%</div>
+            </div>
+            <div id="compatibility-label" class="compatibility-label">En attente</div>
+        </section>
+
+        <!-- 2. COUPLE ZONE -->
+        <section id="couple-zone" class="couple-zone">
+            <!-- JOUEUR -->
+            <article class="character-card">
+                <div id="player-ball-wrapper" class="countryball-wrapper">
+                    <img id="player-image" class="countryball-image" alt="Joueur">
+                    <span id="player-badge" class="level-badge">Débutant</span>
                 </div>
-              </div>
-            </div>
-          </article>
 
-          <article class="id-card" aria-label="Carte d'identité du partenaire">
-            <div class="id-card__accent"></div>
-            <div class="id-card__header">
-              <p class="pill">Partenaire · Droite</p>
-              <span class="dot"></span>
-            </div>
-            <div class="id-fields">
-              <div class="id-field">
-                <p class="id-label">Nom</p>
-                <input
-                  type="text"
-                  id="partnerName"
-                  class="id-input"
-                  name="partnerName"
-                  aria-label="Nom du partenaire"
-                  autocomplete="off"
-                  spellcheck="false"
-                />
-              </div>
-              <div class="id-field">
-                <p class="id-label">Pays</p>
-                <p class="id-value" id="partnerCountry">France</p>
-              </div>
-              <div class="id-field level-field">
-                <div class="level-row">
-                  <div>
-                    <p class="id-label">Niveau</p>
-                    <p class="id-value" id="partnerLevel">-</p>
-                    <p class="rank-title" id="partnerRankTitle">Débutant</p>
-                  </div>
-                  <div class="level-actions" aria-label="Contrôles de niveau partenaire">
-                    <button class="level-btn" data-side="right" data-direction="down" aria-label="Diminuer le niveau du partenaire">−</button>
-                    <button class="level-btn" data-side="right" data-direction="up" aria-label="Augmenter le niveau du partenaire">+</button>
-                  </div>
+                <div class="xp-bar-container">
+                    <div id="player-xp-bar" class="xp-bar"></div>
                 </div>
-              </div>
+                <div class="xp-text" style="text-align:center; font-size:0.8rem; margin-bottom:10px;">
+                    <span id="player-xp-text">0/100 XP</span>
+                </div>
+
+                <div class="id-field">
+                    <label>Nom</label>
+                    <input type="text" id="player-name" placeholder="Nom...">
+                </div>
+                <div class="id-field">
+                    <label>Pays</label>
+                    <span id="player-country-display" style="font-weight:bold;">---</span>
+                </div>
+                <div class="id-field">
+                    <label>Niveau</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <button class="level-btn minus" data-target="player">-</button>
+                        <span id="player-level" style="font-weight:bold; width:30px; text-align:center;">0</span>
+                        <button class="level-btn plus" data-target="player">+</button>
+                    </div>
+                </div>
+                <div class="id-field">
+                    <label>Titre</label>
+                    <span id="player-title" style="color:var(--accent);">Débutant</span>
+                </div>
+            </article>
+
+            <!-- PARTENAIRE -->
+            <article class="character-card">
+                <div id="partner-ball-wrapper" class="countryball-wrapper">
+                    <img id="partner-image" class="countryball-image" alt="Partenaire">
+                    <span id="partner-badge" class="level-badge">Débutant</span>
+                </div>
+
+                <div class="xp-bar-container">
+                    <div id="partner-xp-bar" class="xp-bar"></div>
+                </div>
+                <div class="xp-text" style="text-align:center; font-size:0.8rem; margin-bottom:10px;">
+                    <span id="partner-xp-text">0/100 XP</span>
+                </div>
+
+                <div class="id-field">
+                    <label>Nom</label>
+                    <input type="text" id="partner-name" placeholder="Nom...">
+                </div>
+                <div class="id-field">
+                    <label>Pays</label>
+                    <span id="partner-country-display" style="font-weight:bold;">---</span>
+                </div>
+                <div class="id-field">
+                    <label>Niveau</label>
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <button class="level-btn minus" data-target="partner">-</button>
+                        <span id="partner-level" style="font-weight:bold; width:30px; text-align:center;">0</span>
+                        <button class="level-btn plus" data-target="partner">+</button>
+                    </div>
+                </div>
+                <div class="id-field">
+                    <label>Titre</label>
+                    <span id="partner-title" style="color:var(--accent);">Débutant</span>
+                </div>
+            </article>
+        </section>
+
+        <!-- 4. HISTOIRE -->
+        <section class="story-section">
+            <h2 style="text-align:center; margin-bottom:20px;">📖 Histoire du Couple</h2>
+            <div style="text-align:center; margin-bottom:15px;">
+                <button id="event-btn">🎲 Événement Aléatoire</button>
             </div>
-          </article>
-        </div>
-      </section>
+            <div id="event-log" class="event-log">
+                <!-- Logs -->
+            </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <section class="actions-section" style="text-align:center; margin:30px 0;">
+            <button id="export-btn" style="font-size:1.1rem; padding:15px 30px;">📷 Exporter le couple</button>
+            <button id="save-couple-btn" style="background:#22c55e;">💾 Enregistrer</button>
+            <button id="reset-btn" class="danger">🔄 Réinitialiser</button>
+        </section>
+
+        <!-- 5. HISTORIQUE -->
+        <section class="panel-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2>📚 Historique</h2>
+                <button id="clear-history-btn" class="danger" style="padding:5px 10px; font-size:0.8rem;">Tout
+                    supprimer</button>
+            </div>
+            <div id="history-list"></div>
+        </section>
+
+        <!-- 6. SUCCÈS -->
+        <section class="panel-section">
+            <h2>🏆 Succès</h2>
+            <div id="achievements-grid" class="achievements-grid"></div>
+        </section>
+
     </main>
-  </div>
 
-  <script src="game.js"></script>
+    <!-- Overlay Elements -->
+    <div id="toast-container"></div>
+    <div id="level-up-notification" class="level-up-notification">
+        <div class="level-up-text">LEVEL UP!</div>
+    </div>
+    <div id="export-flash" class="export-flash"></div>
+    <canvas id="export-canvas" style="display:none;"></canvas>
+
+    <script src="game.js"></script>
 </body>
+
 </html>
