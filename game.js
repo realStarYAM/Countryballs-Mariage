@@ -29,6 +29,7 @@ const COUNTRY_DATA = {
     'Espagne': { continent: 'Europe', neighbors: ['France', 'Portugal'] },
     'États-Unis': { continent: 'Amérique', neighbors: ['Canada'] },
     'France': { continent: 'Europe', neighbors: ['Allemagne', 'Belgique', 'Espagne', 'Italie'] },
+    'Grèce': { continent: 'Europe', neighbors: [] },
     'Italie': { continent: 'Europe', neighbors: ['France'] },
     'Japon': { continent: 'Asie', neighbors: ['Corée du Sud'] },
     'Liban': { continent: 'Asie', neighbors: ['Palestine'] },
