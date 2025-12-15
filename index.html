@@ -23,6 +23,21 @@
     </header>
 
     <main>
+        <section class="theme-selector">
+            <div class="theme-card">
+                <div>
+                    <p class="theme-kicker">Univers inspiré manga</p>
+                    <h2>Choisis ton thème</h2>
+                </div>
+                <select id="universe-theme" aria-label="Choisir un thème">
+                    <option value="classique">Classique</option>
+                    <option value="dragonball">Dragon Ball</option>
+                    <option value="onepiece">One Piece</option>
+                    <option value="naruto">Naruto</option>
+                </select>
+            </div>
+        </section>
+
         <!-- 1. SÉLECTION -->
         <section class="country-selectors">
             <div class="selector-group">
@@ -117,7 +132,13 @@
 
                 <div class="id-field">
                     <label>Nom</label>
-                    <input type="text" id="player-name" placeholder="Nom...">
+                    <div class="name-stack">
+                        <input type="text" id="player-name" placeholder="Nom...">
+                        <div class="name-actions">
+                            <button class="ai-name-btn" data-target="player">Prénom IA</button>
+                            <small>5000+ prénoms générés par origine</small>
+                        </div>
+                    </div>
                 </div>
                 <div class="id-field">
                     <label>Pays</label>
@@ -153,7 +174,13 @@
 
                 <div class="id-field">
                     <label>Nom</label>
-                    <input type="text" id="partner-name" placeholder="Nom...">
+                    <div class="name-stack">
+                        <input type="text" id="partner-name" placeholder="Nom...">
+                        <div class="name-actions">
+                            <button class="ai-name-btn" data-target="partner">Prénom IA</button>
+                            <small>5000+ prénoms générés par origine</small>
+                        </div>
+                    </div>
                 </div>
                 <div class="id-field">
                     <label>Pays</label>
