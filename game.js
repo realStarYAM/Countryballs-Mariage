@@ -94,9 +94,11 @@ const ACHIEVEMENTS = [
     { id: 'INTERNATIONAL', title: 'Couple International', desc: 'Deux pays différents', icon: '🌍' },
     { id: 'EXPERT_DUO', title: 'Double Expert', desc: 'Deux niveaux 25+', icon: '🧠' },
     { id: 'LEGEND_DUO', title: 'Double Légende', desc: 'Deux niveaux 80+', icon: '👑' },
-    { id: 'FIRST_EXPORT', title: 'Premier Export', desc: 'Exporter le couple', icon: '📤' }
-    // "Collectionneur" removed as not in new prompt explicit list, but keeping it is fine. 
-    // Prompt said "Exemples". I'll stick to the requested ones for precision.
+    { id: 'FIRST_EXPORT', title: 'Premier Export', desc: 'Exporter le couple', icon: '📤' },
+    { id: 'FIRST_RING', title: 'Premier Anneau', desc: 'Obtenir un anneau', icon: '💫' },
+    { id: 'RARE_RING', title: 'Anneau Rare', desc: 'Trouver un anneau rare', icon: '💠' },
+    { id: 'LEG_RING', title: 'Anneau Légendaire', desc: 'Débloquer un anneau légendaire', icon: '🌟' },
+    { id: 'BLESSED_COUPLE', title: 'Couple Béni', desc: 'Un anneau équipé côté joueur et partenaire', icon: '🕊️' }
 ];
 
 // Événements
@@ -125,7 +127,8 @@ let state = {
     theme: 'classique',
     rings: {
         inventory: [],
-        equipped: { player: null, partner: null }
+        equipped: { player: null, partner: null },
+        guaranteedDrops: 0
     }
 };
 
@@ -248,54 +251,79 @@ function getRingsCatalog() {
     return [
         {
             id: 'confiance',
-            name: 'Confiance',
-            icon: '💞',
+            name: 'Anneau de Confiance',
+            icon: '🤝',
+            rarity: 'common',
+            description: 'Solidifie la complicité et rassure chaque échange.',
+            effects: { compatBonus: 2, bonusOnPositiveEvent: 1 }
+        },
+        {
+            id: 'paix',
+            name: 'Anneau de Paix',
+            icon: '🕊️',
             rarity: 'rare',
-            description: 'Renforce la complicité du couple.',
-            effects: { compatBonus: 3 }
+            description: 'Apaise les tensions et adoucit les moments difficiles.',
+            effects: { reduceNegEventChance: 0.2, compatBonus: 1 }
         },
         {
             id: 'passion',
             name: 'Passion Ardente',
             icon: '🔥',
-            rarity: 'epic',
-            description: 'Chaque moment partagé est plus intense.',
-            effects: { xpMultiplier: 1.5 }
-        },
-        {
-            id: 'serenite',
-            name: 'Sérénité',
-            icon: '🧿',
             rarity: 'rare',
-            description: 'Dissipe les tensions et évite les drames.',
-            effects: { reduceNegEventChance: 0.15 }
+            description: 'Booste l’XP sur chaque aventure, mais reste imprévisible.',
+            effects: { xpMultiplier: 1.35, bonusOnPositiveEvent: 2 }
         },
         {
-            id: 'harmonie',
-            name: 'Harmonie Culturelle',
-            icon: '🕌',
+            id: 'culture',
+            name: 'Éclat Culturel',
+            icon: '📚',
+            rarity: 'common',
+            description: 'Transforme les différences culturelles en atout.',
+            effects: { cancelCultureMalus: true, compatBonus: 1 }
+        },
+        {
+            id: 'equilibre',
+            name: 'Équilibre des Cœurs',
+            icon: '⚖️',
+            rarity: 'common',
+            description: 'Protège doucement le couple des coups durs.',
+            effects: { reduceNegEventChance: 0.1 }
+        },
+        {
+            id: 'lueur',
+            name: 'Lueur du Désert',
+            icon: '✨',
+            rarity: 'rare',
+            description: 'Chaque bonne nouvelle brille encore plus.',
+            effects: { bonusOnPositiveEvent: 3 }
+        },
+        {
+            id: 'legende',
+            name: 'Légende Vivante',
+            icon: '🌟',
             rarity: 'legendary',
-            description: 'Les différences deviennent une force.',
-            effects: { cancelCultureMalus: true }
+            description: 'Une aura mythique qui bénit chaque action.',
+            effects: { compatBonus: 2, xpMultiplier: 1.15, reduceNegEventChance: 0.1 }
         },
         {
             id: 'destin',
-            name: 'Destin Doré',
-            icon: '💍',
-            rarity: 'mythic',
-            description: 'Bénédiction cosmique pour les âmes sœurs.',
-            effects: { compatBonus: 2, xpMultiplier: 1.2 }
+            name: 'Destin Constellé',
+            icon: '💫',
+            rarity: 'legendary',
+            description: 'Le destin veille et récompense les bonnes ondes.',
+            effects: { compatBonus: 1, xpMultiplier: 1.25, reduceNegEventChance: 0.1, bonusOnPositiveEvent: 2 }
         }
     ];
 }
 
 function loadRingsState() {
     if (!state.rings) {
-        state.rings = { inventory: [], equipped: { player: null, partner: null } };
+        state.rings = { inventory: [], equipped: { player: null, partner: null }, guaranteedDrops: 0 };
     }
     const catalogIds = getRingsCatalog().map(r => r.id);
     state.rings.inventory = (state.rings.inventory || []).filter(id => catalogIds.includes(id));
     state.rings.equipped = state.rings.equipped || { player: null, partner: null };
+    state.rings.guaranteedDrops = state.rings.guaranteedDrops || 0;
 }
 
 function saveRingsState() {
@@ -303,14 +331,39 @@ function saveRingsState() {
     renderRingDisplays();
 }
 
-function grantRandomRing() {
-    const missing = getRingsCatalog().filter(r => !state.rings.inventory.includes(r.id));
+function rollRarity() {
+    const roll = Math.random() * 100;
+    if (roll < 70) return 'common';
+    if (roll < 95) return 'rare';
+    return 'legendary';
+}
+
+function pickRingByRarity(rarity, missing) {
+    const pool = missing.filter(r => r.rarity === rarity);
+    if (!pool.length) return null;
+    return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function attemptRingDrop() {
+    const catalog = getRingsCatalog();
+    const missing = catalog.filter(r => !state.rings.inventory.includes(r.id));
     if (!missing.length) return null;
-    if (Math.random() > 0.15) return null;
-    const ring = missing[Math.floor(Math.random() * missing.length)];
+
+    const guaranteed = state.rings.inventory.length < 3 || state.rings.guaranteedDrops < 3;
+    const rarity = rollRarity();
+    let ring = pickRingByRarity(rarity, missing);
+
+    if (!ring && guaranteed) {
+        ring = ['common', 'rare', 'legendary'].map(r => pickRingByRarity(r, missing)).find(Boolean);
+    }
+
+    if (!ring) return null;
+
     state.rings.inventory.push(ring.id);
+    if (guaranteed) state.rings.guaranteedDrops += 1;
     saveRingsState();
-    showToast(`Nouvel anneau obtenu : ${ring.icon} ${ring.name}`);
+    showRingDropModal(ring);
+    checkAchievements();
     return ring;
 }
 
@@ -336,7 +389,7 @@ function openRingModal(side) {
                     <span class="rarity-tag rarity-${ring.rarity}">${ring.rarity}</span>
                 </header>
                 <p>${ring.description}</p>
-                <div class="ring-meta">${formatRingEffects(ring.effects)}</div>
+                <ul class="effects-list">${formatRingEffects(ring.effects).map(e => `<li>${e}</li>`).join('')}</ul>
                 <button onclick="equipRing('${side}','${ring.id}')" ${equipped && state.rings.equipped[side] !== ring.id ? 'disabled' : ''}>
                     ${state.rings.equipped[side] === ring.id ? 'Équipé' : 'Équiper'}
                 </button>
@@ -348,20 +401,49 @@ function openRingModal(side) {
 function equipRing(side, ringId) {
     state.rings.equipped[side] = ringId;
     saveRingsState();
+    checkAchievements();
     closeRingModal();
+}
+
+function equipFromDrop(side) {
+    const modal = $('ring-drop-modal');
+    const ringId = modal?.dataset.ringId;
+    if (!ringId) return;
+    equipRing(side, ringId);
+    closeRingDropModal();
 }
 
 function closeRingModal() {
     $('ring-modal').classList.add('hidden');
 }
 
+function showRingDropModal(ring) {
+    const modal = $('ring-drop-modal');
+    if (!modal) return;
+    modal.dataset.ringId = ring.id;
+    modal.classList.remove('hidden');
+    $('drop-ring-icon').textContent = ring.icon;
+    $('drop-ring-name').textContent = ring.name;
+    $('drop-ring-desc').textContent = ring.description;
+    const badge = $('drop-ring-rarity');
+    badge.textContent = ring.rarity;
+    badge.className = `rarity-tag rarity-${ring.rarity}`;
+    $('drop-ring-effects').innerHTML = formatRingEffects(ring.effects).map(e => `<li>${e}</li>`).join('');
+}
+
+function closeRingDropModal() {
+    const modal = $('ring-drop-modal');
+    modal?.classList.add('hidden');
+}
+
 function formatRingEffects(effects) {
     const parts = [];
-    if (effects.compatBonus) parts.push(`Compat +${effects.compatBonus}`);
+    if (effects.compatBonus) parts.push(`+${effects.compatBonus} compatibilité`);
+    if (effects.bonusOnPositiveEvent) parts.push(`+${effects.bonusOnPositiveEvent} compat sur événements positifs`);
     if (effects.xpMultiplier) parts.push(`XP x${effects.xpMultiplier}`);
     if (effects.reduceNegEventChance) parts.push(`-${Math.round(effects.reduceNegEventChance * 100)}% risque négatif`);
-    if (effects.cancelCultureMalus) parts.push('Annule malus culturel');
-    return parts.join(' · ');
+    if (effects.cancelCultureMalus) parts.push('Annule le malus culturel');
+    return parts;
 }
 
 function getEquippedRing(side) {
@@ -369,9 +451,9 @@ function getEquippedRing(side) {
     return getRingsCatalog().find(r => r.id === id);
 }
 
-function applyRingEffects(event, side) {
-    let compatDelta = event.baseCompatDelta;
-    let xpDelta = event.baseXpDelta;
+function applyRingEffects(event, side, current) {
+    let compatDelta = current.compatDelta;
+    let xpDelta = current.xpDelta;
     const ring = getEquippedRing(side);
     const notes = [];
     if (!ring) return { compatDelta, xpDelta, notes };
@@ -385,6 +467,10 @@ function applyRingEffects(event, side) {
         compatDelta += effects.compatBonus;
         notes.push(`+${effects.compatBonus}% compatibilité grâce à ${ring.icon} ${ring.name}`);
     }
+    if (!event.isNegative && typeof effects.bonusOnPositiveEvent === 'number') {
+        compatDelta += effects.bonusOnPositiveEvent;
+        notes.push(`Bonus positif (${effects.bonusOnPositiveEvent}) via ${ring.icon} ${ring.name}`);
+    }
     if (typeof effects.xpMultiplier === 'number') {
         xpDelta = Math.round(xpDelta * effects.xpMultiplier);
         notes.push(`XP x${effects.xpMultiplier} grâce à ${ring.icon} ${ring.name}`);
@@ -395,10 +481,11 @@ function applyRingEffects(event, side) {
 
 function getNegativeReduction() {
     const equipped = Object.values(state.rings.equipped);
-    return equipped.reduce((acc, id) => {
+    const total = equipped.reduce((acc, id) => {
         const ring = getRingsCatalog().find(r => r.id === id);
         return acc + (ring?.effects?.reduceNegEventChance || 0);
     }, 0);
+    return Math.min(Math.max(total, 0), 0.6);
 }
 
 function generateEventWithRings() {
@@ -408,7 +495,7 @@ function generateEventWithRings() {
     const negativePool = EVENTS.filter(e => e.isNegative);
     const positivePool = EVENTS.filter(e => !e.isNegative);
     const baseNegChance = 0.35;
-    const effectiveNegChance = Math.max(0.05, baseNegChance - getNegativeReduction());
+    const effectiveNegChance = Math.max(0.05, baseNegChance * (1 - getNegativeReduction()));
     const pool = Math.random() < effectiveNegChance ? negativePool : positivePool;
     const evt = pool[Math.floor(Math.random() * pool.length)];
 
@@ -417,7 +504,7 @@ function generateEventWithRings() {
     const notes = [];
 
     ['player', 'partner'].forEach(side => {
-        const { compatDelta: c, xpDelta: x, notes: n } = applyRingEffects({ ...evt, baseCompatDelta: compatDelta, baseXpDelta: xpDelta }, side);
+        const { compatDelta: c, xpDelta: x, notes: n } = applyRingEffects(evt, side, { compatDelta, xpDelta });
         compatDelta = c;
         xpDelta = x;
         notes.push(...n);
@@ -438,7 +525,7 @@ function generateEventWithRings() {
         setTimeout(() => ui.coupleZone.classList.remove('shake'), 500);
     }
 
-    grantRandomRing();
+    attemptRingDrop();
 }
 
 // ==================== CORE LOGIC ====================
@@ -556,8 +643,8 @@ function renderRingDisplays() {
     const playerRing = getEquippedRing('player');
     const partnerRing = getEquippedRing('partner');
 
-    ui.pRingDisplay.innerHTML = playerRing ? `<span class="ring-icon">${playerRing.icon}</span> ${playerRing.name}` : 'Aucun anneau';
-    ui.partRingDisplay.innerHTML = partnerRing ? `<span class="ring-icon">${partnerRing.icon}</span> ${partnerRing.name}` : 'Aucun anneau';
+    ui.pRingDisplay.innerHTML = playerRing ? `<span class="ring-icon">${playerRing.icon}</span> ${playerRing.name} <span class="rarity-tag rarity-${playerRing.rarity}">${playerRing.rarity}</span>` : 'Aucun anneau';
+    ui.partRingDisplay.innerHTML = partnerRing ? `<span class="ring-icon">${partnerRing.icon}</span> ${partnerRing.name} <span class="rarity-tag rarity-${partnerRing.rarity}">${partnerRing.rarity}</span>` : 'Aucun anneau';
 }
 
 // ==================== FEATURES ====================
@@ -626,6 +713,8 @@ function load() {
 
         applyTheme(state.theme || 'classique', true);
 
+        checkAchievements();
+
         // Load theme
         if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
     } else {
@@ -685,13 +774,19 @@ window.delHistory = (i) => {
 // 6. Achievements
 function checkAchievements() {
     const score = calculateCompat();
+    const inventory = state.rings?.inventory || [];
+    const catalog = getRingsCatalog();
 
     const checks = {
         'PERFECT_MATCH': score >= 100,
         'INTERNATIONAL': state.player.country !== state.partner.country && state.player.country && state.partner.country,
         'EXPERT_DUO': state.player.level >= 25 && state.partner.level >= 25,
         'LEGEND_DUO': state.player.level >= 80 && state.partner.level >= 80,
-        'FIRST_EXPORT': false // Handled in export
+        'FIRST_EXPORT': false, // Handled in export
+        'FIRST_RING': inventory.length >= 1,
+        'RARE_RING': inventory.some(id => catalog.find(r => r.id === id)?.rarity === 'rare'),
+        'LEG_RING': inventory.some(id => catalog.find(r => r.id === id)?.rarity === 'legendary'),
+        'BLESSED_COUPLE': Boolean(state.rings?.equipped?.player && state.rings?.equipped?.partner)
     };
 
     let changed = false;
@@ -840,6 +935,9 @@ if (ui.universeTheme) ui.universeTheme.onchange = (e) => applyTheme(e.target.val
 $('close-ring-modal').onclick = closeRingModal;
 $('ring-modal').addEventListener('click', (e) => {
     if (e.target.id === 'ring-modal') closeRingModal();
+});
+$('ring-drop-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'ring-drop-modal') closeRingDropModal();
 });
 
 // Init

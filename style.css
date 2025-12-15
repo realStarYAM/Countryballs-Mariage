@@ -564,15 +564,92 @@ svg {
     padding: 2px 8px;
     border-radius: 8px;
     border: 1px solid var(--border);
+    text-transform: capitalize;
 }
 
+.rarity-common { color: #a5b4fc; }
 .rarity-rare { color: #38bdf8; }
-.rarity-epic { color: #c084fc; }
 .rarity-legendary { color: #fbbf24; }
-.rarity-mythic { color: #22d3ee; }
 
 .ring-card p {
     margin: 0;
+}
+
+.effects-list {
+    list-style: disc;
+    padding-left: 18px;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+    display: grid;
+    gap: 4px;
+}
+
+.ring-drop-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4000;
+    padding: 20px;
+}
+
+.ring-drop-modal.hidden { display: none; }
+
+.ring-drop-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    width: min(540px, 100%);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.ring-drop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.ring-drop-body {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ring-drop-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+}
+
+.ring-drop-title {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-weight: 700;
+}
+
+.ring-drop-desc {
+    margin: 6px 0;
+    color: var(--text-muted);
+}
+
+.ring-drop-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    flex-wrap: wrap;
 }
 
 /* Animations */
