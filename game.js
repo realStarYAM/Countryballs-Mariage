@@ -39,18 +39,14 @@ function buildImagePath(country, role) {
 
 function setBallImage(img, src, fallbackAlt = "Image indisponible") {
   img.classList.remove("is-visible");
-  return new Promise((resolve) => {
-    img.onload = () => {
-      img.classList.add("is-visible");
-      resolve();
-    };
-    img.onerror = () => {
-      img.alt = fallbackAlt;
-      img.classList.remove("is-visible");
-      resolve();
-    };
-    img.src = src;
-  });
+  img.onload = () => {
+    img.classList.add("is-visible");
+  };
+  img.onerror = () => {
+    img.alt = fallbackAlt;
+    img.classList.remove("is-visible");
+  };
+  img.src = src;
 }
 
 function updateImages(country) {
@@ -58,14 +54,8 @@ function updateImages(country) {
   const playerPath = buildImagePath(cleanedCountry, "gauche");
   const partnerPath = buildImagePath(cleanedCountry, "droite");
 
-  elements.couplePanel.setAttribute("aria-busy", "true");
-
-  Promise.all([
-    setBallImage(elements.player, playerPath, "Image joueur indisponible"),
-    setBallImage(elements.partner, partnerPath, "Image partenaire indisponible"),
-  ]).finally(() => {
-    elements.couplePanel.removeAttribute("aria-busy");
-  });
+  setBallImage(elements.player, playerPath, "Image joueur indisponible");
+  setBallImage(elements.partner, partnerPath, "Image partenaire indisponible");
 }
 
 function onCountryChange(event) {
