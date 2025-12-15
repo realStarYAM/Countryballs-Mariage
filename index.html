@@ -278,6 +278,31 @@
         </div>
     </div>
 
+    <div id="ring-drop-modal" class="ring-drop-modal hidden" role="dialog" aria-modal="true" aria-label="Nouvel anneau">
+        <div class="ring-drop-card">
+            <div class="ring-drop-header">
+                <h3>Anneau obtenu !</h3>
+                <button class="ghost-btn" onclick="closeRingDropModal()">✕</button>
+            </div>
+            <div class="ring-drop-body">
+                <div class="ring-drop-icon" id="drop-ring-icon">💍</div>
+                <div class="ring-drop-info">
+                    <div class="ring-drop-title">
+                        <span id="drop-ring-name">Anneau mystère</span>
+                        <span id="drop-ring-rarity" class="rarity-tag">rarity</span>
+                    </div>
+                    <p id="drop-ring-desc" class="ring-drop-desc"></p>
+                    <ul id="drop-ring-effects" class="effects-list"></ul>
+                </div>
+            </div>
+            <div class="ring-drop-actions">
+                <button class="ghost-btn" onclick="equipFromDrop('player')">Équiper (Joueur)</button>
+                <button class="ghost-btn" onclick="equipFromDrop('partner')">Équiper (Partenaire)</button>
+                <button onclick="closeRingDropModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <script src="game.js"></script>
 </body>
 
