@@ -101,12 +101,15 @@ const ACHIEVEMENTS = [
 
 // Événements
 const EVENTS = [
-    { text: "Dîner romantique", effect: { compat: 5, xp: 10 }, icon: '🍷' },
-    { text: "Dispute mineure", effect: { compat: -5, xp: 5 }, icon: '💢' },
-    { text: "Voyage surprise", effect: { compat: 10, xp: 20 }, icon: '✈️' },
-    { text: "Cadeau raté", effect: { compat: -10, xp: 0 }, icon: '🎁' },
-    { text: "Adoption animal", effect: { compat: 8, xp: 15 }, icon: '🐕' },
-    { text: "Netflix & Chill", effect: { compat: 3, xp: 5 }, icon: '📺' }
+    { text: "Dîner romantique", baseCompatDelta: 5, baseXpDelta: 10, isNegative: false, tags: ['romance'], icon: '🍷' },
+    { text: "Dispute culturelle", baseCompatDelta: -8, baseXpDelta: 5, isNegative: true, tags: ['culture'], icon: '💢' },
+    { text: "Voyage surprise", baseCompatDelta: 12, baseXpDelta: 20, isNegative: false, tags: ['aventure'], icon: '✈️' },
+    { text: "Cadeau raté", baseCompatDelta: -10, baseXpDelta: 0, isNegative: true, tags: ['malchance'], icon: '🎁' },
+    { text: "Adoption d'un animal", baseCompatDelta: 8, baseXpDelta: 15, isNegative: false, tags: ['famille'], icon: '🐕' },
+    { text: "Netflix & Chill", baseCompatDelta: 3, baseXpDelta: 5, isNegative: false, tags: ['quotidien'], icon: '📺' },
+    { text: "Choc des cultures", baseCompatDelta: -12, baseXpDelta: 8, isNegative: true, tags: ['culture'], icon: '🧭' },
+    { text: "Promenade méditerranéenne", baseCompatDelta: 6, baseXpDelta: 12, isNegative: false, tags: ['aventure'], icon: '🌊' },
+    { text: "Atelier cuisine fusion", baseCompatDelta: 7, baseXpDelta: 10, isNegative: false, tags: ['culture'], icon: '🍲' }
 ];
 
 // ==================== STATE ====================
@@ -119,7 +122,11 @@ let state = {
     logs: [],
     lastEvent: 0,
     compatBonus: 0,
-    theme: 'classique'
+    theme: 'classique',
+    rings: {
+        inventory: [],
+        equipped: { player: null, partner: null }
+    }
 };
 
 // ==================== DOM SEARCH ====================
@@ -151,6 +158,8 @@ const ui = {
     partXpText: $('partner-xp-text'),
     pCountryDisplay: $('player-country-display'),
     partCountryDisplay: $('partner-country-display'),
+    pRingDisplay: $('player-ring-display'),
+    partRingDisplay: $('partner-ring-display'),
 
     // Compat
     compatSection: $('compatibility-section'),
@@ -233,6 +242,205 @@ function applyTheme(themeKey, silent = false) {
     }
 }
 
+// ==================== RINGS ====================
+
+function getRingsCatalog() {
+    return [
+        {
+            id: 'confiance',
+            name: 'Confiance',
+            icon: '💞',
+            rarity: 'rare',
+            description: 'Renforce la complicité du couple.',
+            effects: { compatBonus: 3 }
+        },
+        {
+            id: 'passion',
+            name: 'Passion Ardente',
+            icon: '🔥',
+            rarity: 'epic',
+            description: 'Chaque moment partagé est plus intense.',
+            effects: { xpMultiplier: 1.5 }
+        },
+        {
+            id: 'serenite',
+            name: 'Sérénité',
+            icon: '🧿',
+            rarity: 'rare',
+            description: 'Dissipe les tensions et évite les drames.',
+            effects: { reduceNegEventChance: 0.15 }
+        },
+        {
+            id: 'harmonie',
+            name: 'Harmonie Culturelle',
+            icon: '🕌',
+            rarity: 'legendary',
+            description: 'Les différences deviennent une force.',
+            effects: { cancelCultureMalus: true }
+        },
+        {
+            id: 'destin',
+            name: 'Destin Doré',
+            icon: '💍',
+            rarity: 'mythic',
+            description: 'Bénédiction cosmique pour les âmes sœurs.',
+            effects: { compatBonus: 2, xpMultiplier: 1.2 }
+        }
+    ];
+}
+
+function loadRingsState() {
+    if (!state.rings) {
+        state.rings = { inventory: [], equipped: { player: null, partner: null } };
+    }
+    const catalogIds = getRingsCatalog().map(r => r.id);
+    state.rings.inventory = (state.rings.inventory || []).filter(id => catalogIds.includes(id));
+    state.rings.equipped = state.rings.equipped || { player: null, partner: null };
+}
+
+function saveRingsState() {
+    save();
+    renderRingDisplays();
+}
+
+function grantRandomRing() {
+    const missing = getRingsCatalog().filter(r => !state.rings.inventory.includes(r.id));
+    if (!missing.length) return null;
+    if (Math.random() > 0.15) return null;
+    const ring = missing[Math.floor(Math.random() * missing.length)];
+    state.rings.inventory.push(ring.id);
+    saveRingsState();
+    showToast(`Nouvel anneau obtenu : ${ring.icon} ${ring.name}`);
+    return ring;
+}
+
+function openRingModal(side) {
+    const modal = $('ring-modal');
+    const inventoryEl = $('ring-inventory');
+    modal.dataset.side = side;
+    modal.classList.remove('hidden');
+
+    const inventory = state.rings.inventory;
+    if (!inventory.length) {
+        inventoryEl.innerHTML = '<p class="empty">Aucun anneau obtenu pour le moment.</p>';
+        return;
+    }
+
+    inventoryEl.innerHTML = inventory.map(id => {
+        const ring = getRingsCatalog().find(r => r.id === id);
+        const equipped = Object.values(state.rings.equipped).includes(id);
+        return `
+            <div class="ring-card">
+                <header>
+                    <div class="ring-meta"><span class="ring-icon">${ring.icon}</span> ${ring.name}</div>
+                    <span class="rarity-tag rarity-${ring.rarity}">${ring.rarity}</span>
+                </header>
+                <p>${ring.description}</p>
+                <div class="ring-meta">${formatRingEffects(ring.effects)}</div>
+                <button onclick="equipRing('${side}','${ring.id}')" ${equipped && state.rings.equipped[side] !== ring.id ? 'disabled' : ''}>
+                    ${state.rings.equipped[side] === ring.id ? 'Équipé' : 'Équiper'}
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+function equipRing(side, ringId) {
+    state.rings.equipped[side] = ringId;
+    saveRingsState();
+    closeRingModal();
+}
+
+function closeRingModal() {
+    $('ring-modal').classList.add('hidden');
+}
+
+function formatRingEffects(effects) {
+    const parts = [];
+    if (effects.compatBonus) parts.push(`Compat +${effects.compatBonus}`);
+    if (effects.xpMultiplier) parts.push(`XP x${effects.xpMultiplier}`);
+    if (effects.reduceNegEventChance) parts.push(`-${Math.round(effects.reduceNegEventChance * 100)}% risque négatif`);
+    if (effects.cancelCultureMalus) parts.push('Annule malus culturel');
+    return parts.join(' · ');
+}
+
+function getEquippedRing(side) {
+    const id = state.rings.equipped[side];
+    return getRingsCatalog().find(r => r.id === id);
+}
+
+function applyRingEffects(event, side) {
+    let compatDelta = event.baseCompatDelta;
+    let xpDelta = event.baseXpDelta;
+    const ring = getEquippedRing(side);
+    const notes = [];
+    if (!ring) return { compatDelta, xpDelta, notes };
+    const effects = ring.effects || {};
+
+    if (effects.cancelCultureMalus && event.tags?.includes('culture') && compatDelta < 0) {
+        compatDelta = 0;
+        notes.push(`Malus culturel annulé grâce à ${ring.icon} ${ring.name}`);
+    }
+    if (typeof effects.compatBonus === 'number') {
+        compatDelta += effects.compatBonus;
+        notes.push(`+${effects.compatBonus}% compatibilité grâce à ${ring.icon} ${ring.name}`);
+    }
+    if (typeof effects.xpMultiplier === 'number') {
+        xpDelta = Math.round(xpDelta * effects.xpMultiplier);
+        notes.push(`XP x${effects.xpMultiplier} grâce à ${ring.icon} ${ring.name}`);
+    }
+
+    return { compatDelta, xpDelta, notes };
+}
+
+function getNegativeReduction() {
+    const equipped = Object.values(state.rings.equipped);
+    return equipped.reduce((acc, id) => {
+        const ring = getRingsCatalog().find(r => r.id === id);
+        return acc + (ring?.effects?.reduceNegEventChance || 0);
+    }, 0);
+}
+
+function generateEventWithRings() {
+    const now = Date.now();
+    if (now - state.lastEvent < CONFIG.EVENT_COOLDOWN) return;
+
+    const negativePool = EVENTS.filter(e => e.isNegative);
+    const positivePool = EVENTS.filter(e => !e.isNegative);
+    const baseNegChance = 0.35;
+    const effectiveNegChance = Math.max(0.05, baseNegChance - getNegativeReduction());
+    const pool = Math.random() < effectiveNegChance ? negativePool : positivePool;
+    const evt = pool[Math.floor(Math.random() * pool.length)];
+
+    let compatDelta = evt.baseCompatDelta;
+    let xpDelta = evt.baseXpDelta;
+    const notes = [];
+
+    ['player', 'partner'].forEach(side => {
+        const { compatDelta: c, xpDelta: x, notes: n } = applyRingEffects({ ...evt, baseCompatDelta: compatDelta, baseXpDelta: xpDelta }, side);
+        compatDelta = c;
+        xpDelta = x;
+        notes.push(...n);
+    });
+
+    state.compatBonus += compatDelta;
+    addXP('player', xpDelta);
+    addXP('partner', xpDelta);
+
+    state.logs.unshift({ date: now, text: evt.text, icon: evt.icon, compatDelta, xpDelta, notes });
+    if (state.logs.length > 10) state.logs.pop();
+    state.lastEvent = now;
+    save();
+    renderLogs();
+
+    if (compatDelta < 0) {
+        ui.coupleZone.classList.add('shake');
+        setTimeout(() => ui.coupleZone.classList.remove('shake'), 500);
+    }
+
+    grantRandomRing();
+}
+
 // ==================== CORE LOGIC ====================
 
 function calculateCompat() {
@@ -310,6 +518,7 @@ function updateUI(target) {
     ui[`${target === 'player' ? 'p' : 'part'}XpText`].textContent = `${char.xp}/${CONFIG.XP_PER_LEVEL} XP`;
 
     updateCompatUI();
+    renderRingDisplays();
 }
 
 function updateCompatUI() {
@@ -341,6 +550,14 @@ function updateCompatUI() {
     if (state.player.country || state.partner.country) {
         ui.compatSection.classList.add('visible');
     }
+}
+
+function renderRingDisplays() {
+    const playerRing = getEquippedRing('player');
+    const partnerRing = getEquippedRing('partner');
+
+    ui.pRingDisplay.innerHTML = playerRing ? `<span class="ring-icon">${playerRing.icon}</span> ${playerRing.name}` : 'Aucun anneau';
+    ui.partRingDisplay.innerHTML = partnerRing ? `<span class="ring-icon">${partnerRing.icon}</span> ${partnerRing.name}` : 'Aucun anneau';
 }
 
 // ==================== FEATURES ====================
@@ -375,8 +592,15 @@ function triggerEvent() {
 function renderLogs() {
     ui.eventLog.innerHTML = state.logs.map(l => `
         <div class="log-entry">
-            <span class="log-time">${new Date(l.date).toLocaleTimeString()}</span>
-            <span>${l.icon} ${l.text}</span>
+            <div class="log-main">
+                <span class="log-time">${new Date(l.date).toLocaleTimeString()}</span>
+                <span>${l.icon} ${l.text}</span>
+            </div>
+            <div class="log-effects">
+                <span class="effect-chip">${(l.compatDelta ?? 0) >= 0 ? '+' : ''}${l.compatDelta ?? 0}% compat</span>
+                <span class="effect-chip">+${l.xpDelta ?? 0} XP</span>
+            </div>
+            ${l.notes?.length ? `<div class="log-notes">${l.notes.map(n => `<div>${n}</div>`).join('')}</div>` : ''}
         </div>
     `).join('') || '<p class="empty">Aucun événement</p>';
 }
@@ -390,6 +614,7 @@ function load() {
     const s = localStorage.getItem(CONFIG.STORAGE_KEY);
     if (s) {
         state = { ...state, ...JSON.parse(s) };
+        loadRingsState();
         ui.pCountry.value = state.player.country;
         ui.partCountry.value = state.partner.country;
 
@@ -404,6 +629,7 @@ function load() {
         // Load theme
         if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
     } else {
+        loadRingsState();
         applyTheme(state.theme, true);
     }
 }
@@ -582,7 +808,7 @@ document.querySelectorAll('.ai-name-btn').forEach(btn => {
     };
 });
 
-if (ui.eventBtn) ui.eventBtn.onclick = triggerEvent;
+if (ui.eventBtn) ui.eventBtn.onclick = generateEventWithRings;
 if (ui.saveBtn) ui.saveBtn.onclick = addToHistory;
 if (ui.resetBtn) ui.resetBtn.onclick = () => {
     if (confirm('Réinitialiser le couple ? (Historique conservé)')) {
@@ -611,6 +837,10 @@ ui.themeToggle.onclick = () => {
     localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 };
 if (ui.universeTheme) ui.universeTheme.onchange = (e) => applyTheme(e.target.value);
+$('close-ring-modal').onclick = closeRingModal;
+$('ring-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'ring-modal') closeRingModal();
+});
 
 // Init
 window.onload = load;
