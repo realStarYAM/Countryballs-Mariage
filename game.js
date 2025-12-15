@@ -17,7 +17,16 @@ const THEMES = {
     classique: { icon: '❤️', vibe: 'Classique' },
     dragonball: { icon: '⭐️', vibe: 'Dragon Ball' },
     onepiece: { icon: '☠️', vibe: 'One Piece' },
-    naruto: { icon: '🌀', vibe: 'Naruto' }
+    naruto: { icon: '🌀', vibe: 'Naruto' },
+    ios: { icon: '🍏', vibe: 'iOS' },
+    windows: { icon: '🪟', vibe: 'Windows' },
+    macos: { icon: '🍎', vibe: 'macOS' },
+    oneui: { icon: '🌌', vibe: 'One UI' },
+    ubuntu: { icon: '🟠', vibe: 'Ubuntu' },
+    deepin: { icon: '💠', vibe: 'Deepin' },
+    android: { icon: '🤖', vibe: 'Android' },
+    miui: { icon: '🧡', vibe: 'MIUI' },
+    hyperos: { icon: '💎', vibe: 'HyperOS' }
 };
 
 const XP_REWARDS = {

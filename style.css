@@ -51,6 +51,78 @@ body[data-theme="naruto"] {
     --rank-legend: #f43f5e;
 }
 
+body[data-theme="ios"] {
+    --accent: #34c759;
+    --rank-beginner: #a3e635;
+    --rank-intermediate: #bef264;
+    --rank-expert: #22d3ee;
+    --rank-legend: #0ea5e9;
+}
+
+body[data-theme="windows"] {
+    --accent: #3b82f6;
+    --rank-beginner: #60a5fa;
+    --rank-intermediate: #93c5fd;
+    --rank-expert: #2563eb;
+    --rank-legend: #1d4ed8;
+}
+
+body[data-theme="macos"] {
+    --accent: #6366f1;
+    --rank-beginner: #c7d2fe;
+    --rank-intermediate: #a5b4fc;
+    --rank-expert: #818cf8;
+    --rank-legend: #4f46e5;
+}
+
+body[data-theme="oneui"] {
+    --accent: #0ea5e9;
+    --rank-beginner: #67e8f9;
+    --rank-intermediate: #38bdf8;
+    --rank-expert: #22d3ee;
+    --rank-legend: #0ea5e9;
+}
+
+body[data-theme="ubuntu"] {
+    --accent: #e95420;
+    --rank-beginner: #f97316;
+    --rank-intermediate: #fb923c;
+    --rank-expert: #f59e0b;
+    --rank-legend: #ea580c;
+}
+
+body[data-theme="deepin"] {
+    --accent: #8b5cf6;
+    --rank-beginner: #c084fc;
+    --rank-intermediate: #a855f7;
+    --rank-expert: #7c3aed;
+    --rank-legend: #6d28d9;
+}
+
+body[data-theme="android"] {
+    --accent: #22c55e;
+    --rank-beginner: #86efac;
+    --rank-intermediate: #4ade80;
+    --rank-expert: #22c55e;
+    --rank-legend: #16a34a;
+}
+
+body[data-theme="miui"] {
+    --accent: #fb923c;
+    --rank-beginner: #fcd34d;
+    --rank-intermediate: #f97316;
+    --rank-expert: #f59e0b;
+    --rank-legend: #ea580c;
+}
+
+body[data-theme="hyperos"] {
+    --accent: #22d3ee;
+    --rank-beginner: #67e8f9;
+    --rank-intermediate: #38bdf8;
+    --rank-expert: #0ea5e9;
+    --rank-legend: #0891b2;
+}
+
 body {
     background: var(--bg);
     color: var(--text);
@@ -237,6 +309,11 @@ select {
     padding: 8px;
     border-radius: 8px;
     outline: none;
+}
+
+select option {
+    color: #0f172a;
+    background-color: #f8fafc;
 }
 
 button {
