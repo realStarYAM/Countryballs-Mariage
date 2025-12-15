@@ -11,9 +11,16 @@ const elements = {
   partner: document.getElementById("partnerImage"),
   themeToggle: document.getElementById("themeToggle"),
   couplePanel: document.getElementById("couplePanel"),
+  playerName: document.getElementById("playerName"),
+  partnerName: document.getElementById("partnerName"),
+  playerCountry: document.getElementById("playerCountry"),
+  partnerCountry: document.getElementById("partnerCountry"),
+  playerLevel: document.getElementById("playerLevel"),
+  partnerLevel: document.getElementById("partnerLevel"),
 };
 
 const defaultCountry = COUNTRIES[0];
+const levelCache = new Map();
 
 const getSavedTheme = () => localStorage.getItem(STORAGE_KEYS.theme);
 const getSavedCountry = () => localStorage.getItem(STORAGE_KEYS.country);
@@ -35,6 +42,22 @@ function buildImagePath(country, role) {
   const safeRole = role === "droite" ? "droite" : "gauche";
   const folder = encodeURIComponent(safeCountry);
   return `Pays/${folder}/heureux_${safeRole}.PNG`;
+}
+
+function calculateLevel(country) {
+  const key = country || defaultCountry;
+  if (levelCache.has(key)) {
+    return levelCache.get(key);
+  }
+
+  let hash = 0;
+  for (const char of key.trim().toLowerCase()) {
+    hash = (hash * 31 + char.charCodeAt(0)) % 9973;
+  }
+
+  const level = 12 + (hash % 89); // Niveau stable entre 12 et 100
+  levelCache.set(key, level);
+  return level;
 }
 
 function setBallImage(imgEl, country, role, label) {
@@ -62,7 +85,23 @@ function updateImages(country) {
   setBallImage(elements.player, country, "gauche", "Avatar joueur");
   setBallImage(elements.partner, country, "droite", "Avatar partenaire");
 
+  updateIDCards(country);
+
   window.requestAnimationFrame(() => elements.couplePanel.removeAttribute("aria-busy"));
+}
+
+function updateIDCards(country) {
+  const safeCountry = country || defaultCountry;
+  const level = calculateLevel(safeCountry);
+
+  elements.playerName.textContent = "Joueur";
+  elements.partnerName.textContent = "Partenaire";
+
+  elements.playerCountry.textContent = safeCountry;
+  elements.partnerCountry.textContent = safeCountry;
+
+  elements.playerLevel.textContent = `Niveau ${level}`;
+  elements.partnerLevel.textContent = `Niveau ${level}`;
 }
 
 function onCountryChange(event) {
