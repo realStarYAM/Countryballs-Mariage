@@ -31,23 +31,32 @@ function toggleTheme() {
 }
 
 function buildImagePath(country, role) {
-  // role = "gauche" | "droite"
-  return `Pays/${country}/heureux_${role}.png`;
+  const safeCountry = encodeURIComponent(country.trim());
+  const safeRole = role === "droite" ? "droite" : "gauche";
+  return `Pays/${safeCountry}/heureux_${safeRole}.png`;
 }
 
-function setBallImage(img, src) {
+function setBallImage(img, src, fallbackAlt) {
   img.classList.remove("is-visible");
   img.onload = () => img.classList.add("is-visible");
   img.onerror = () => {
-    img.alt = "Image indisponible";
+    img.alt = fallbackAlt || "Image indisponible";
     img.classList.remove("is-visible");
   };
   img.src = src;
 }
 
 function updateImages(country) {
-  setBallImage(elements.player, buildImagePath(country, "gauche"));
-  setBallImage(elements.partner, buildImagePath(country, "droite"));
+  setBallImage(
+    elements.player,
+    buildImagePath(country, "gauche"),
+    `Joueur ${country}`
+  );
+  setBallImage(
+    elements.partner,
+    buildImagePath(country, "droite"),
+    `Partenaire ${country}`
+  );
   elements.couplePanel.setAttribute("aria-busy", "true");
   window.requestAnimationFrame(() => elements.couplePanel.removeAttribute("aria-busy"));
 }
