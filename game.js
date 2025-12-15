@@ -30,34 +30,70 @@ function toggleTheme() {
   applyTheme(newTheme);
 }
 
-function buildImagePath(country, role) {
-  const safeCountry = encodeURIComponent(country.trim());
+function buildImageCandidates(country, role) {
   const safeRole = role === "droite" ? "droite" : "gauche";
-  return `Pays/${safeCountry}/heureux_${safeRole}.png`;
+  const folder = encodeURIComponent(country.trim());
+  const baseNames = [
+    `heureux_${safeRole}.png`,
+    `heureux_${safeRole}.PNG`,
+    `heureux ${safeRole}.png`,
+    `heureux ${safeRole}.PNG`,
+    `heureux_${safeRole}_.png`,
+    `heureux_${safeRole}_.PNG`,
+    `heureux_${safeRole} .png`,
+    `heureux_${safeRole} .PNG`,
+  ];
+
+  const uniquePaths = [...new Set(baseNames)].map((filename) => {
+    const safeFilename = encodeURIComponent(filename);
+    return `Pays/${folder}/${safeFilename}`;
+  });
+
+  return uniquePaths;
 }
 
-function setBallImage(img, src, fallbackAlt) {
-  img.classList.remove("is-visible");
-  img.onload = () => img.classList.add("is-visible");
-  img.onerror = () => {
-    img.alt = fallbackAlt || "Image indisponible";
-    img.classList.remove("is-visible");
+function loadFirstWorkingImage(imgEl, candidates, fallbackAlt) {
+  imgEl.classList.remove("is-visible");
+
+  const tryLoad = (index) => {
+    if (index >= candidates.length) {
+      imgEl.alt = fallbackAlt || "Image indisponible";
+      imgEl.removeAttribute("src");
+      imgEl.classList.remove("is-visible");
+      return;
+    }
+
+    const candidate = candidates[index];
+    const probe = new Image();
+
+    probe.onload = () => {
+      imgEl.src = candidate;
+      imgEl.alt = fallbackAlt || "Avatar chargé";
+      imgEl.classList.add("is-visible");
+    };
+
+    probe.onerror = () => tryLoad(index + 1);
+    probe.src = candidate;
   };
-  img.src = src;
+
+  tryLoad(0);
 }
 
 function updateImages(country) {
-  setBallImage(
-    elements.player,
-    buildImagePath(country, "gauche"),
-    `Joueur ${country}`
-  );
-  setBallImage(
-    elements.partner,
-    buildImagePath(country, "droite"),
-    `Partenaire ${country}`
-  );
   elements.couplePanel.setAttribute("aria-busy", "true");
+
+  loadFirstWorkingImage(
+    elements.player,
+    buildImageCandidates(country, "gauche"),
+    `Avatar joueur pour ${country}`
+  );
+
+  loadFirstWorkingImage(
+    elements.partner,
+    buildImageCandidates(country, "droite"),
+    `Avatar partenaire pour ${country}`
+  );
+
   window.requestAnimationFrame(() => elements.couplePanel.removeAttribute("aria-busy"));
 }
 
