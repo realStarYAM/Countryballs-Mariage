@@ -30,69 +30,37 @@ function toggleTheme() {
   applyTheme(newTheme);
 }
 
-function buildImageCandidates(country, role) {
+function buildImagePath(country, role) {
+  const safeCountry = country ? country.trim() : "";
   const safeRole = role === "droite" ? "droite" : "gauche";
-  const folder = encodeURIComponent(country.trim());
-  const baseNames = [
-    `heureux_${safeRole}.png`,
-    `heureux_${safeRole}.PNG`,
-    `heureux ${safeRole}.png`,
-    `heureux ${safeRole}.PNG`,
-    `heureux_${safeRole}_.png`,
-    `heureux_${safeRole}_.PNG`,
-    `heureux_${safeRole} .png`,
-    `heureux_${safeRole} .PNG`,
-  ];
-
-  const uniquePaths = [...new Set(baseNames)].map((filename) => {
-    const safeFilename = encodeURIComponent(filename);
-    return `Pays/${folder}/${safeFilename}`;
-  });
-
-  return uniquePaths;
+  const folder = encodeURIComponent(safeCountry);
+  return `Pays/${folder}/heureux_${safeRole}.PNG`;
 }
 
-function loadFirstWorkingImage(imgEl, candidates, fallbackAlt) {
+function setBallImage(imgEl, country, role, label) {
+  const src = buildImagePath(country, role);
+
   imgEl.classList.remove("is-visible");
-
-  const tryLoad = (index) => {
-    if (index >= candidates.length) {
-      imgEl.alt = fallbackAlt || "Image indisponible";
-      imgEl.removeAttribute("src");
-      imgEl.classList.remove("is-visible");
-      return;
-    }
-
-    const candidate = candidates[index];
-    const probe = new Image();
-
-    probe.onload = () => {
-      imgEl.src = candidate;
-      imgEl.alt = fallbackAlt || "Avatar chargé";
-      imgEl.classList.add("is-visible");
-    };
-
-    probe.onerror = () => tryLoad(index + 1);
-    probe.src = candidate;
+  imgEl.onload = () => imgEl.classList.add("is-visible");
+  imgEl.onerror = () => {
+    imgEl.removeAttribute("src");
+    imgEl.alt = `${label} indisponible`;
+    imgEl.classList.remove("is-visible");
   };
 
-  tryLoad(0);
+  imgEl.alt = `${label} (${country})`;
+  imgEl.src = src;
+
+  if (imgEl.complete && imgEl.naturalWidth > 0) {
+    imgEl.classList.add("is-visible");
+  }
 }
 
 function updateImages(country) {
   elements.couplePanel.setAttribute("aria-busy", "true");
 
-  loadFirstWorkingImage(
-    elements.player,
-    buildImageCandidates(country, "gauche"),
-    `Avatar joueur pour ${country}`
-  );
-
-  loadFirstWorkingImage(
-    elements.partner,
-    buildImageCandidates(country, "droite"),
-    `Avatar partenaire pour ${country}`
-  );
+  setBallImage(elements.player, country, "gauche", "Avatar joueur");
+  setBallImage(elements.partner, country, "droite", "Avatar partenaire");
 
   window.requestAnimationFrame(() => elements.couplePanel.removeAttribute("aria-busy"));
 }
