@@ -39,13 +39,15 @@
         </div>
         <div class="couple" id="couplePanel">
           <div class="avatar">
-            <div class="avatar__frame">
+            <div class="avatar__frame" id="playerFrame">
+              <div class="rank-badge" id="playerBadge" aria-hidden="true"></div>
               <img id="playerImage" src="" alt="Joueur" />
             </div>
             <p class="legend">Joueur</p>
           </div>
           <div class="avatar">
-            <div class="avatar__frame">
+            <div class="avatar__frame" id="partnerFrame">
+              <div class="rank-badge" id="partnerBadge" aria-hidden="true"></div>
               <img id="partnerImage" src="" alt="Partenaire" />
             </div>
             <p class="legend">Partenaire</p>
@@ -83,9 +85,18 @@
                 <p class="id-label">Pays</p>
                 <p class="id-value" id="playerCountry">France</p>
               </div>
-              <div class="id-field">
-                <p class="id-label">Niveau</p>
-                <p class="id-value" id="playerLevel">-</p>
+              <div class="id-field level-field">
+                <div class="level-row">
+                  <div>
+                    <p class="id-label">Niveau</p>
+                    <p class="id-value" id="playerLevel">-</p>
+                    <p class="rank-title" id="playerRankTitle">Débutant</p>
+                  </div>
+                  <div class="level-actions" aria-label="Contrôles de niveau joueur">
+                    <button class="level-btn" data-side="left" data-direction="down" aria-label="Diminuer le niveau du joueur">−</button>
+                    <button class="level-btn" data-side="left" data-direction="up" aria-label="Augmenter le niveau du joueur">+</button>
+                  </div>
+                </div>
               </div>
             </div>
           </article>
@@ -113,9 +124,18 @@
                 <p class="id-label">Pays</p>
                 <p class="id-value" id="partnerCountry">France</p>
               </div>
-              <div class="id-field">
-                <p class="id-label">Niveau</p>
-                <p class="id-value" id="partnerLevel">-</p>
+              <div class="id-field level-field">
+                <div class="level-row">
+                  <div>
+                    <p class="id-label">Niveau</p>
+                    <p class="id-value" id="partnerLevel">-</p>
+                    <p class="rank-title" id="partnerRankTitle">Débutant</p>
+                  </div>
+                  <div class="level-actions" aria-label="Contrôles de niveau partenaire">
+                    <button class="level-btn" data-side="right" data-direction="down" aria-label="Diminuer le niveau du partenaire">−</button>
+                    <button class="level-btn" data-side="right" data-direction="up" aria-label="Augmenter le niveau du partenaire">+</button>
+                  </div>
+                </div>
               </div>
             </div>
           </article>

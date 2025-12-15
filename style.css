@@ -196,6 +196,28 @@ main {
   pointer-events: none;
 }
 
+.rank-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.rank-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .avatar img {
   width: 100%;
   height: auto;
@@ -220,6 +242,14 @@ main {
   text-transform: uppercase;
   font-size: 13px;
   font-weight: 700;
+}
+
+.rank-title {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  font-size: 14px;
 }
 
 .id-section {
@@ -292,6 +322,50 @@ main {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.level-field {
+  padding: 12px;
+}
+
+.level-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.level-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.level-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.25);
+}
+
+.level-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.level-btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .id-label {
@@ -379,4 +453,123 @@ body.light select {
 
 body.light .tag {
   background: rgba(14, 17, 24, 0.06);
+}
+
+body.light .level-btn {
+  border-color: rgba(14, 17, 24, 0.08);
+  background: rgba(14, 17, 24, 0.04);
+}
+
+body.light .rank-badge {
+  background: rgba(14, 17, 24, 0.06);
+  color: var(--text);
+}
+
+/* Rangs */
+.rank-beginner {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.rank-bronze {
+  border: 1px solid #d69763;
+  box-shadow: 0 10px 30px rgba(214, 151, 99, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.rank-silver {
+  border: 1px solid #b6c4d9;
+  box-shadow: 0 14px 32px rgba(182, 196, 217, 0.32), 0 0 22px rgba(182, 196, 217, 0.4);
+}
+
+.rank-gold {
+  border: 1px solid #f5c767;
+  box-shadow: 0 16px 38px rgba(245, 199, 103, 0.35), 0 0 28px rgba(245, 199, 103, 0.5);
+}
+
+.rank-legend {
+  border: 1px solid #ff9f54;
+  box-shadow: 0 20px 50px rgba(255, 159, 84, 0.45), 0 0 32px rgba(255, 94, 74, 0.5);
+  animation: legendPulse 2.8s ease-in-out infinite;
+}
+
+.rank-legend::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 159, 84, 0.4);
+  filter: blur(8px);
+  animation: legendAura 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes legendPulse {
+  0%,
+  100% {
+    box-shadow: 0 20px 50px rgba(255, 159, 84, 0.45), 0 0 26px rgba(255, 94, 74, 0.45);
+  }
+  50% {
+    box-shadow: 0 20px 60px rgba(255, 159, 84, 0.55), 0 0 34px rgba(255, 94, 74, 0.6);
+  }
+}
+
+@keyframes legendAura {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.03);
+  }
+}
+
+.badge-gold {
+  background: linear-gradient(120deg, #f5c767, #ffefb4);
+  color: #5b3c12;
+}
+
+.badge-legend {
+  background: linear-gradient(120deg, #ff9f54, #ff6f6f);
+  color: #1b0a07;
+  box-shadow: 0 12px 30px rgba(255, 159, 84, 0.35);
+}
+
+.level-pop {
+  animation: levelPop 260ms ease;
+}
+
+@keyframes levelPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.level-shake {
+  animation: levelShake 380ms ease;
+}
+
+@keyframes levelShake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
