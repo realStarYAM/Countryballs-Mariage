@@ -2,308 +2,176 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Countryballs Mariage RPG</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countryballs Mariage RPG - Beta 5.5</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cinzel:wght@600;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
 </head>
 
 <body>
 
-    <header>
-        <div class="theme-toggle-container" style="position: absolute; top: 20px; right: 20px;">
-            <button id="theme-toggle">🌙/☀️</button>
+  <!-- 1. LOADER -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="logo-text">COUNTRYBALLS RPG</div>
+      <div class="spinner"></div>
+      <div class="progress-container">
+        <div class="progress-fill" id="loader-bar"></div>
+      </div>
+      <div id="loading-text">Chargement des ressources...</div>
+    </div>
+  </div>
+
+  <!-- 2. FLASH OVERLAY -->
+  <div id="flash-overlay"></div>
+
+  <!-- 3. CANVAS CONFETTI -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- 4. APP CONTENT -->
+  <div id="app">
+
+    <header class="main-header glass-panel">
+      <h1>MARIAGE RPG</h1>
+      <p class="subtitle">ÉDITION PREMIUM BETA 5.5</p>
+
+      <!-- LEVEL / XP DISPLAY -->
+      <div class="xp-container">
+        <div class="level-badge" id="level-badge">Niv. 1</div>
+        <div class="xp-bar-wrapper">
+          <div class="xp-bar" id="xp-bar"></div>
         </div>
-        <h1>Countryballs Mariage RPG</h1>
-        <p>Créez le couple international ultime !</p>
+        <span class="xp-text" id="xp-text">0 / 100 XP</span>
+      </div>
+
+      <button id="btn-history" class="history-btn" title="Voir l'historique">📜 Historique</button>
     </header>
 
-    <main>
-        <section class="theme-selector">
-            <div class="theme-card">
-                <div>
-                    <p class="theme-kicker">Univers inspiré manga</p>
-                    <h2>Choisis ton thème</h2>
-                </div>
-                <select id="universe-theme" aria-label="Choisir un thème">
-                    <option value="classique">Classique</option>
-                    <option value="dragonball">Dragon Ball</option>
-                    <option value="onepiece">One Piece</option>
-                    <option value="naruto">Naruto</option>
-                    <option value="ios">iOS</option>
-                    <option value="windows">Windows</option>
-                    <option value="macos">macOS</option>
-                    <option value="oneui">One UI</option>
-                    <option value="ubuntu">Ubuntu</option>
-                    <option value="deepin">Deepin</option>
-                    <option value="android">Android</option>
-                    <option value="miui">MIUI</option>
-                    <option value="hyperos">HyperOS</option>
-                </select>
-            </div>
-        </section>
+    <main class="game-container">
 
-        <!-- 1. SÉLECTION -->
-        <section class="country-selectors">
-            <div class="selector-group">
-                <label>Pays Joueur</label>
-                <select id="player-country">
-                    <option value="">-- Choisir --</option>
-                    <option value="Algérie">Algérie</option>
-                    <option value="Allemagne">Allemagne</option>
-                    <option value="Belgique">Belgique</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Corée du Sud">Corée du Sud</option>
-                    <option value="Espagne">Espagne</option>
-                    <option value="États-Unis">États-Unis</option>
-                    <option value="France">France</option>
-                    <option value="Grèce">Grèce</option>
-                    <option value="Italie">Italie</option>
-                    <option value="Japon">Japon</option>
-                    <option value="Liban">Liban</option>
-                    <option value="Maroc">Maroc</option>
-                    <option value="Pakistan">Pakistan</option>
-                    <option value="Palestine">Palestine</option>
-                    <option value="Pologne">Pologne</option>
-                    <option value="Portugal">Portugal</option>
-                    <option value="Royaume-Uni">Royaume-Uni</option>
-                    <option value="Russie">Russie</option>
-                    <option value="Tunisie">Tunisie</option>
-                    <option value="Ukraine">Ukraine</option>
-                </select>
-            </div>
+      <!-- JOUEUR -->
+      <section class="selection-area">
+        <div class="card glass-panel" id="card-player">
+          <div class="card-title">JOUEUR</div>
 
-            <div class="heart-separator">
-                <span id="couple-heart" class="heart-icon">❤️</span>
+          <div class="gender-toggle" id="gender-p">
+            <button class="g-btn active" data-role="player" data-gender="m">👨 Homme</button>
+            <button class="g-btn" data-role="player" data-gender="f">🎀 Femme</button>
+          </div>
+
+          <div class="field-group">
+            <label>NATION</label>
+            <select id="select-country-p"></select>
+          </div>
+
+          <div class="field-group">
+            <label>IDENTITÉ</label>
+            <div class="input-row">
+              <input type="text" id="name-p" placeholder="Prénom">
+              <input type="text" id="lastname-p" placeholder="Nom">
+              <button class="dice-btn" id="btn-dice-p" title="Générer Identité IA">🎲</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTRE -->
+        <div class="center-stage glass-panel" id="center-panel">
+
+          <div class="visual-stage">
+            <div class="ball-container left">
+              <img id="img-p" src="" class="ball-img hidden" alt="Joueur">
+              <div id="ph-p" class="ball-placeholder">?</div>
+            </div>
+            <div class="ball-container right">
+              <img id="img-part" src="" class="ball-img hidden" alt="Partenaire">
+              <div id="ph-part" class="ball-placeholder">?</div>
+            </div>
+          </div>
+
+          <!-- PARTICLES HEARTS CONTAINER -->
+          <div id="particles-hearts"></div>
+
+          <div class="score-circle-wrapper">
+            <!-- SVG Fix: viewBox allows padding to prevent cropping stroke -->
+            <svg class="score-svg" width="160" height="160" viewBox="0 0 160 160">
+              <circle class="bg-ring" cx="80" cy="80" r="70"></circle>
+              <circle class="progress-ring" id="ring-progress" cx="80" cy="80" r="70" pathLength="100"></circle>
+            </svg>
+            <div class="score-text">
+              <span id="score-val">0%</span>
+              <small>COMPATIBILITÉ</small>
             </div>
 
-            <div class="selector-group">
-                <label>Pays Partenaire</label>
-                <select id="partner-country">
-                    <option value="">-- Choisir --</option>
-                    <option value="Algérie">Algérie</option>
-                    <option value="Allemagne">Allemagne</option>
-                    <option value="Belgique">Belgique</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Corée du Sud">Corée du Sud</option>
-                    <option value="Espagne">Espagne</option>
-                    <option value="États-Unis">États-Unis</option>
-                    <option value="France">France</option>
-                    <option value="Grèce">Grèce</option>
-                    <option value="Italie">Italie</option>
-                    <option value="Japon">Japon</option>
-                    <option value="Liban">Liban</option>
-                    <option value="Maroc">Maroc</option>
-                    <option value="Pakistan">Pakistan</option>
-                    <option value="Palestine">Palestine</option>
-                    <option value="Pologne">Pologne</option>
-                    <option value="Portugal">Portugal</option>
-                    <option value="Royaume-Uni">Royaume-Uni</option>
-                    <option value="Russie">Russie</option>
-                    <option value="Tunisie">Tunisie</option>
-                    <option value="Ukraine">Ukraine</option>
-                </select>
+            <div id="badge-union" class="union-badge">✨ UNION PARFAITE</div>
+            <div id="badge-fusion" class="fusion-badge">👑 FUSION ULTIME</div>
+          </div>
+
+          <button id="btn-union" class="btn-action">CÉLÉBRER L'UNION</button>
+          <p id="status-msg">En attente des participants...</p>
+
+        </div>
+
+        <!-- PARTENAIRE -->
+        <div class="card glass-panel" id="card-partner">
+          <div class="card-title">PARTENAIRE</div>
+
+          <div class="gender-toggle" id="gender-part">
+            <button class="g-btn" data-role="partner" data-gender="m">👨 Homme</button>
+            <button class="g-btn active" data-role="partner" data-gender="f">🎀 Femme</button>
+          </div>
+
+          <div class="field-group">
+            <label>NATION</label>
+            <select id="select-country-part"></select>
+          </div>
+
+          <div class="field-group">
+            <label>IDENTITÉ</label>
+            <div class="input-row">
+              <input type="text" id="name-part" placeholder="Prénom">
+              <input type="text" id="lastname-part" placeholder="Nom">
+              <button class="dice-btn" id="btn-dice-part" title="Générer Identité IA">🎲</button>
             </div>
-        </section>
+          </div>
+        </div>
 
-        <!-- COMPATIBILITÉ -->
-        <section id="compatibility-section" class="compatibility-section">
-            <div class="compatibility-circle">
-                <svg>
-                    <circle class="bg-circle" cx="60" cy="60" r="54" stroke="var(--border)" fill="none"
-                        stroke-width="8"></circle>
-                    <circle id="progress-circle" class="progress-circle" cx="60" cy="60" r="54"></circle>
-                </svg>
-                <div class="compatibility-value"><span id="compatibility-percent">0</span>%</div>
-            </div>
-            <div id="compatibility-label" class="compatibility-label">En attente</div>
-        </section>
-
-        <!-- 2. COUPLE ZONE -->
-        <section id="couple-zone" class="couple-zone">
-            <!-- JOUEUR -->
-            <article class="character-card">
-                <div id="player-ball-wrapper" class="countryball-wrapper">
-                    <img id="player-image" class="countryball-image" alt="Joueur">
-                    <span id="player-badge" class="level-badge">Débutant</span>
-                </div>
-
-                <div class="xp-bar-container">
-                    <div id="player-xp-bar" class="xp-bar"></div>
-                </div>
-                <div class="xp-text" style="text-align:center; font-size:0.8rem; margin-bottom:10px;">
-                    <span id="player-xp-text">0/100 XP</span>
-                </div>
-
-                <div class="id-field">
-                    <label>Nom</label>
-                    <div class="name-stack">
-                        <input type="text" id="player-name" placeholder="Nom...">
-                        <div class="name-actions">
-                            <button class="ai-name-btn" data-target="player">Prénom IA</button>
-                            <small>5000+ prénoms générés par origine</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="id-field">
-                    <label>Pays</label>
-                    <span id="player-country-display" style="font-weight:bold;">---</span>
-                </div>
-                <div class="id-field">
-                    <label>Niveau</label>
-                    <div style="display:flex; gap:5px; align-items:center;">
-                        <button class="level-btn minus" data-target="player">-</button>
-                        <span id="player-level" style="font-weight:bold; width:30px; text-align:center;">0</span>
-                        <button class="level-btn plus" data-target="player">+</button>
-                    </div>
-                </div>
-                <div class="id-field">
-                    <label>Titre</label>
-                    <span id="player-title" style="color:var(--accent);">Débutant</span>
-                </div>
-                <div class="id-field ring-row">
-                    <div>
-                        <label>Anneau équipé</label>
-                        <div id="player-ring-display" class="ring-display">Aucun anneau</div>
-                    </div>
-                    <button class="ghost-btn" data-side="player" onclick="openRingModal('player')">Choisir anneau</button>
-                </div>
-            </article>
-
-            <!-- PARTENAIRE -->
-            <article class="character-card">
-                <div id="partner-ball-wrapper" class="countryball-wrapper">
-                    <img id="partner-image" class="countryball-image" alt="Partenaire">
-                    <span id="partner-badge" class="level-badge">Débutant</span>
-                </div>
-
-                <div class="xp-bar-container">
-                    <div id="partner-xp-bar" class="xp-bar"></div>
-                </div>
-                <div class="xp-text" style="text-align:center; font-size:0.8rem; margin-bottom:10px;">
-                    <span id="partner-xp-text">0/100 XP</span>
-                </div>
-
-                <div class="id-field">
-                    <label>Nom</label>
-                    <div class="name-stack">
-                        <input type="text" id="partner-name" placeholder="Nom...">
-                        <div class="name-actions">
-                            <button class="ai-name-btn" data-target="partner">Prénom IA</button>
-                            <small>5000+ prénoms générés par origine</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="id-field">
-                    <label>Pays</label>
-                    <span id="partner-country-display" style="font-weight:bold;">---</span>
-                </div>
-                <div class="id-field">
-                    <label>Niveau</label>
-                    <div style="display:flex; gap:5px; align-items:center;">
-                        <button class="level-btn minus" data-target="partner">-</button>
-                        <span id="partner-level" style="font-weight:bold; width:30px; text-align:center;">0</span>
-                        <button class="level-btn plus" data-target="partner">+</button>
-                    </div>
-                </div>
-                <div class="id-field">
-                    <label>Titre</label>
-                    <span id="partner-title" style="color:var(--accent);">Débutant</span>
-                </div>
-                <div class="id-field ring-row">
-                    <div>
-                        <label>Anneau équipé</label>
-                        <div id="partner-ring-display" class="ring-display">Aucun anneau</div>
-                    </div>
-                    <button class="ghost-btn" data-side="partner" onclick="openRingModal('partner')">Choisir anneau</button>
-                </div>
-            </article>
-        </section>
-
-        <!-- 4. HISTOIRE -->
-        <section class="story-section">
-            <h2 style="text-align:center; margin-bottom:20px;">📖 Histoire du Couple</h2>
-            <div style="text-align:center; margin-bottom:15px;">
-                <button id="event-btn">🎲 Événement Aléatoire</button>
-            </div>
-            <div id="event-log" class="event-log">
-                <!-- Logs -->
-            </div>
-        </section>
-
-        <!-- ACTIONS -->
-        <section class="actions-section" style="text-align:center; margin:30px 0;">
-            <button id="export-btn" style="font-size:1.1rem; padding:15px 30px;">📷 Exporter le couple</button>
-            <button id="save-couple-btn" style="background:#22c55e;">💾 Enregistrer</button>
-            <button id="reset-btn" class="danger">🔄 Réinitialiser</button>
-        </section>
-
-        <!-- 5. HISTORIQUE -->
-        <section class="panel-section">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h2>📚 Historique</h2>
-                <button id="clear-history-btn" class="danger" style="padding:5px 10px; font-size:0.8rem;">Tout
-                    supprimer</button>
-            </div>
-            <div id="history-list"></div>
-        </section>
-
-        <!-- 6. SUCCÈS -->
-        <section class="panel-section">
-            <h2>🏆 Succès</h2>
-            <div id="achievements-grid" class="achievements-grid"></div>
-        </section>
-
+      </section>
     </main>
+  </div>
 
-    <!-- Overlay Elements -->
-    <div id="toast-container"></div>
-    <div id="level-up-notification" class="level-up-notification">
-        <div class="level-up-text">LEVEL UP!</div>
+  <!-- 5. MODAL UNION -->
+  <dialog id="modal-union" class="glass-modal">
+    <div class="modal-content">
+      <h2 id="modal-title">Mariage célébré 💍</h2>
+      <p id="modal-text">La cérémonie fut un succès !</p>
+      <button id="btn-modal-close" class="btn-action small-btn">OK</button>
     </div>
-    <div id="export-flash" class="export-flash"></div>
-    <canvas id="export-canvas" style="display:none;"></canvas>
+  </dialog>
 
-    <div id="ring-modal" class="ring-modal hidden" role="dialog" aria-modal="true" aria-label="Sélection d'anneau">
-        <div class="ring-modal-content">
-            <div class="ring-modal-header">
-                <h3>Anneaux du Destin</h3>
-                <button class="ghost-btn" id="close-ring-modal">✕</button>
-            </div>
-            <div id="ring-inventory" class="ring-inventory"></div>
-        </div>
+  <!-- 6. MODAL HISTORIQUE -->
+  <dialog id="modal-history" class="glass-modal">
+    <div class="modal-content history-content">
+      <h2>📜 Historique des Unions</h2>
+      <div id="history-list" class="history-list">
+        <!-- Liste injectée via JS -->
+      </div>
+      <div class="modal-actions">
+        <button id="btn-clear-history" class="btn-text">Effacer</button>
+        <button id="btn-history-close" class="btn-action small-btn">Fermer</button>
+      </div>
     </div>
+  </dialog>
 
-    <div id="ring-drop-modal" class="ring-drop-modal hidden" role="dialog" aria-modal="true" aria-label="Nouvel anneau">
-        <div class="ring-drop-card">
-            <div class="ring-drop-header">
-                <h3>Anneau obtenu !</h3>
-                <button class="ghost-btn" onclick="closeRingDropModal()">✕</button>
-            </div>
-            <div class="ring-drop-body">
-                <div class="ring-drop-icon" id="drop-ring-icon">💍</div>
-                <div class="ring-drop-info">
-                    <div class="ring-drop-title">
-                        <span id="drop-ring-name">Anneau mystère</span>
-                        <span id="drop-ring-rarity" class="rarity-tag">rarity</span>
-                    </div>
-                    <p id="drop-ring-desc" class="ring-drop-desc"></p>
-                    <ul id="drop-ring-effects" class="effects-list"></ul>
-                </div>
-            </div>
-            <div class="ring-drop-actions">
-                <button class="ghost-btn" onclick="equipFromDrop('player')">Équiper (Joueur)</button>
-                <button class="ghost-btn" onclick="equipFromDrop('partner')">Équiper (Partenaire)</button>
-                <button onclick="closeRingDropModal()">Fermer</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="game.js"></script>
+  <!-- SCRIPTS -->
+  <script src="choices.js"></script>
+  <script src="scenario.js"></script>
+  <script src="game.js"></script>
 </body>
 
 </html>
