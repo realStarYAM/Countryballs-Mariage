@@ -1358,11 +1358,14 @@ input:focus {
 
 /* Header Buttons Container */
 .header-buttons {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    position: static;
+    top: auto;
+    right: auto;
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .collection-btn {
