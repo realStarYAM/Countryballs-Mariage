@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countryballs Mariage RPG - Beta 5.5</title>
+  <title>Countryballs Mariage RPG - Beta 7.0</title>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cinzel:wght@600;800&display=swap"
@@ -50,7 +50,33 @@
         <span class="xp-text" id="xp-text">0 / 100 XP</span>
       </div>
 
-      <button id="btn-history" class="history-btn" title="Voir l'historique">📜 Historique</button>
+      <!-- THEME SELECTOR -->
+      <div class="theme-selector">
+        <label for="select-theme">🎨 Thème</label>
+        <select id="select-theme">
+          <option value="default">Défaut (Premium)</option>
+          <option value="ubuntu">Ubuntu</option>
+          <option value="aero">Windows Aero (7)</option>
+          <option value="win95">Windows 95</option>
+          <option value="winxp">Windows XP</option>
+          <option value="ios">iOS</option>
+          <option value="android">Android Material</option>
+          <option value="oneui">One UI (Samsung)</option>
+          <option value="miui">MIUI (Xiaomi)</option>
+          <option value="google">Google Design</option>
+        </select>
+      </div>
+
+      <div class="header-buttons">
+        <button id="btn-audio" class="audio-btn" title="Activer/Désactiver le son">🔇 Son</button>
+        <button id="btn-stats" class="stats-btn" title="Statistiques">📊 Stats</button>
+        <button id="btn-achievements" class="achievements-btn" title="Mes Succès">🏆 <span
+            id="achievement-count">0/12</span></button>
+        <button id="btn-collection" class="collection-btn" title="Ma Collection">💍 <span
+            id="ring-count">0</span></button>
+        <button id="btn-history" class="history-btn" title="Voir l'historique">📜 Historique</button>
+        <button id="btn-settings" class="settings-btn" title="Paramètres">⚙️</button>
+      </div>
     </header>
 
     <main class="game-container">
@@ -168,7 +194,152 @@
     </div>
   </dialog>
 
+  <!-- 7. MODAL RING CELEBRATION -->
+  <dialog id="modal-ring" class="glass-modal ring-modal">
+    <div class="modal-content ring-content">
+      <div class="ring-beam"></div>
+      <div class="ring-display">
+        <div class="ring-icon">💍</div>
+        <div class="ring-particles-container" id="ring-particles"></div>
+      </div>
+      <h2 id="ring-rarity-text" class="ring-rarity-title">LEGENDARY RING</h2>
+      <div class="ring-stats">
+        <p id="ring-countries"></p>
+        <p id="ring-compatibility"></p>
+      </div>
+      <button id="btn-ring-collect" class="btn-action small-btn">💍 Collecter</button>
+    </div>
+  </dialog>
+
+  <!-- 8. MODAL EVENT -->
+  <dialog id="modal-event" class="glass-modal event-modal">
+    <div class="modal-content event-content">
+      <div class="event-icon" id="event-icon">🌍</div>
+      <h2 id="event-title">Événement</h2>
+      <p id="event-description" class="event-desc"></p>
+      <div id="event-choices" class="event-choices">
+        <!-- Choices injected via JS -->
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 9. MODAL ACHIEVEMENTS -->
+  <dialog id="modal-achievements" class="glass-modal achievements-modal">
+    <div class="modal-content achievements-content">
+      <h2>🏆 Mes Succès</h2>
+      <div class="achievements-progress">
+        <span id="achievement-progress-text">0 / 12 débloqués</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="achievement-progress-bar"></div>
+        </div>
+      </div>
+      <div id="achievements-grid" class="achievements-grid">
+        <!-- Achievements injected via JS -->
+      </div>
+      <button id="btn-achievements-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- 10. MODAL COLLECTION -->
+  <dialog id="modal-collection" class="glass-modal collection-modal">
+    <div class="modal-content collection-content">
+      <h2>💍 Ma Collection d'Anneaux</h2>
+      <div class="collection-stats">
+        <div class="stat-item">Total: <span id="total-rings">0</span></div>
+        <div class="stat-item">❤️ <span id="mythic-count">0</span></div>
+        <div class="stat-item">🧡 <span id="legendary-count">0</span></div>
+        <div class="stat-item">💜 <span id="epic-count">0</span></div>
+        <div class="stat-item">💙 <span id="rare-count">0</span></div>
+        <div class="stat-item">🤍 <span id="common-count">0</span></div>
+      </div>
+      <div id="collection-grid" class="collection-grid">
+        <!-- Anneaux injectés via JS -->
+      </div>
+      <button id="btn-collection-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- 11. MODAL STATS -->
+  <dialog id="modal-stats" class="glass-modal stats-modal">
+    <div class="modal-content stats-content">
+      <h2>📊 Statistiques</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon">💍</span>
+          <span class="stat-value" id="stat-marriages">0</span>
+          <span class="stat-label">Mariages</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🌍</span>
+          <span class="stat-value" id="stat-countries">0/22</span>
+          <span class="stat-label">Pays Découverts</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">❤️</span>
+          <span class="stat-value" id="stat-avg-compat">0%</span>
+          <span class="stat-label">Compat. Moyenne</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-value" id="stat-best-compat">0%</span>
+          <span class="stat-label">Meilleure Compat.</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-value" id="stat-rare-rate">0%</span>
+          <span class="stat-label">Taux Légendaire+</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🔮</span>
+          <span class="stat-value" id="stat-fusions">0/6</span>
+          <span class="stat-label">Fusions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⚡</span>
+          <span class="stat-value" id="stat-total-xp">0</span>
+          <span class="stat-label">XP Total Gagné</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">⏱️</span>
+          <span class="stat-value" id="stat-playtime">0h 0m</span>
+          <span class="stat-label">Temps de Jeu</span>
+        </div>
+      </div>
+      <button id="btn-stats-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- 12. MODAL SETTINGS -->
+  <dialog id="modal-settings" class="glass-modal settings-modal">
+    <div class="modal-content settings-content">
+      <h2>⚙️ Paramètres</h2>
+
+      <div class="settings-section">
+        <h3>💾 Sauvegarde</h3>
+        <div class="settings-actions">
+          <button id="btn-export" class="btn-action">📥 Exporter la Partie</button>
+          <button id="btn-import" class="btn-action">📤 Importer une Partie</button>
+          <input type="file" id="import-file" accept=".json" style="display: none;">
+        </div>
+      </div>
+
+      <div class="settings-section danger-zone">
+        <h3>⚠️ Zone Dangereuse</h3>
+        <button id="btn-reset" class="btn-danger">🗑️ Réinitialiser Tout</button>
+        <p class="danger-warning">Cette action est irréversible !</p>
+      </div>
+
+      <button id="btn-settings-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
   <!-- SCRIPTS -->
+  <script src="audio.js"></script>
+  <script src="events.js"></script>
+  <script src="visual-fx.js"></script>
+  <script src="achievements.js"></script>
+  <script src="stats.js"></script>
+  <script src="save-manager.js"></script>
   <script src="choices.js"></script>
   <script src="scenario.js"></script>
   <script src="game.js"></script>

@@ -11,6 +11,140 @@
     --font-body: 'Outfit', sans-serif;
 }
 
+/* ==================== THEMES ==================== */
+
+/* Ubuntu Theme */
+body.theme-ubuntu {
+    --primary: #e95420;
+    --accent: #77216f;
+    --badge-violet: #5e2750;
+    --glass-bg: rgba(44, 0, 30, 0.85);
+    --glass-border: 1px solid rgba(233, 84, 32, 0.3);
+    --bg-gradient: linear-gradient(135deg, #2c001e 0%, #772953 100%);
+}
+
+/* Windows Aero (7) Theme */
+body.theme-aero {
+    --primary: #4cc2ff;
+    --accent: #0078d7;
+    --badge-violet: #7f00ff;
+    --glass-bg: rgba(25, 60, 95, 0.7);
+    --glass-border: 1px solid rgba(76, 194, 255, 0.4);
+    --bg-gradient: linear-gradient(180deg, #0d47a1 0%, #1976d2 100%);
+}
+
+/* Windows 95 Theme */
+body.theme-win95 {
+    --primary: #c0c0c0;
+    --accent: #008080;
+    --badge-violet: #800080;
+    --glass-bg: rgba(192, 192, 192, 0.95);
+    --glass-border: 2px ridge #ffffff;
+    --bg-gradient: linear-gradient(90deg, #008080 0%, #009999 100%);
+}
+
+body.theme-win95 * {
+    font-family: 'MS Sans Serif', Arial, sans-serif;
+    color: #000;
+}
+
+body.theme-win95 .glass-panel {
+    box-shadow: 2px 2px 0 #000, inset 1px 1px 0 #fff;
+    border-radius: 0;
+}
+
+/* Windows XP Theme */
+body.theme-winxp {
+    --primary: #ffa500;
+    --accent: #0055cc;
+    --badge-violet: #6699ff;
+    --glass-bg: rgba(236, 233, 216, 0.9);
+    --glass-border: 1px solid #003399;
+    --bg-gradient: linear-gradient(180deg, #0055cc 0%, #5eacf7 50%, #57a0ee 100%);
+}
+
+body.theme-winxp * {
+    color: #000;
+}
+
+body.theme-winxp .glass-panel {
+    border-radius: 8px;
+}
+
+/* iOS Theme */
+body.theme-ios {
+    --primary: #007aff;
+    --accent: #5ac8fa;
+    --badge-violet: #af52de;
+    --glass-bg: rgba(242, 242, 247, 0.8);
+    --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+    --bg-gradient: linear-gradient(180deg, #f2f2f7 0%, #e5e5ea 100%);
+}
+
+body.theme-ios * {
+    color: #000;
+    font-family: -apple-system, 'SF Pro Display', sans-serif;
+}
+
+body.theme-ios .glass-panel {
+    backdrop-filter: blur(40px);
+    border-radius: 20px;
+}
+
+/* Android Material Theme */
+body.theme-android {
+    --primary: #4caf50;
+    --accent: #03a9f4;
+    --badge-violet: #9c27b0;
+    --glass-bg: rgba(33, 33, 33, 0.9);
+    --glass-border: 1px solid rgba(76, 175, 80, 0.3);
+    --bg-gradient: linear-gradient(135deg, #212121 0%, #424242 100%);
+}
+
+body.theme-android * {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* One UI (Samsung) Theme */
+body.theme-oneui {
+    --primary: #1e88e5;
+    --accent: #00bcd4;
+    --badge-violet: #673ab7;
+    --glass-bg: rgba(18, 18, 18, 0.85);
+    --glass-border: 1px solid rgba(30, 136, 229, 0.3);
+    --bg-gradient: linear-gradient(180deg, #000000 0%, #1a237e 100%);
+}
+
+/* MIUI (Xiaomi) Theme */
+body.theme-miui {
+    --primary: #ff6900;
+    --accent: #ff9100;
+    --badge-violet: #ff3d00;
+    --glass-bg: rgba(18, 18, 18, 0.9);
+    --glass-border: 1px solid rgba(255, 105, 0, 0.4);
+    --bg-gradient: linear-gradient(135deg, #121212 0%, #ff6900 100%);
+}
+
+/* Google Design Theme */
+body.theme-google {
+    --primary: #4285f4;
+    --accent: #ea4335;
+    --badge-violet: #9c27b0;
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-border: 1px solid rgba(0, 0, 0, 0.12);
+    --bg-gradient: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+}
+
+body.theme-google * {
+    color: #202124;
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+}
+
+body.theme-google .glass-panel {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -23,6 +157,11 @@ body {
     color: white;
     min-height: 100vh;
     overflow-x: hidden;
+}
+
+/* Modal open: prevent background scroll */
+body.modal-open {
+    overflow: hidden;
 }
 
 /* --- 1. LOADER --- */
@@ -200,6 +339,21 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: perspective(1000px) rotateY(2deg) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover {
+    transform: perspective(1000px) rotateY(2deg) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+#card-partner:hover {
+    transform: perspective(1000px) rotateY(-2deg) translateY(-5px);
 }
 
 .card-title {
@@ -366,6 +520,20 @@ input:focus {
 .score-svg {
     transform: rotate(-90deg);
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    transition: filter 0.3s ease;
+}
+
+/* === GLOW EFFECTS PREMIUM === */
+.score-svg.ring-glow-red {
+    filter: drop-shadow(0 0 20px #ff4444) drop-shadow(0 0 10px rgba(255, 68, 68, 0.5));
+}
+
+.score-svg.ring-glow-yellow {
+    filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+}
+
+.score-svg.ring-glow-green {
+    filter: drop-shadow(0 0 25px #4ade80) drop-shadow(0 0 15px rgba(74, 222, 128, 0.6));
 }
 
 .bg-ring {
@@ -379,12 +547,12 @@ input:focus {
     stroke: var(--primary);
     stroke-width: 10;
     stroke-linecap: round;
-    /* Round ends */
-    stroke-dasharray: 440;
-    /* 2 * PI * 70 ≈ 440 */
-    stroke-dashoffset: 440;
+    stroke-dasharray: 100;
+    /* pathLength=100 dans le HTML */
+    stroke-dashoffset: 100;
     /* Start full empty */
-    transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Animation progressive */
 }
 
 .score-text {
@@ -448,7 +616,7 @@ input:focus {
 
 /* ACTION BUTTON */
 .btn-action {
-    background: linear-gradient(135deg, #eee 0%, #fff 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     color: #000;
     border: none;
     padding: 14px 30px;
@@ -457,20 +625,22 @@ input:focus {
     font-family: var(--font-head);
     font-size: 0.95rem;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     margin-top: 15px;
-    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
 }
 
 .btn-action:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 8px 25px rgba(255, 255, 255, 0.4);
+    animation: buttonPulse 1.5s ease-in-out infinite;
 }
 
 .btn-action:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+    animation: none;
 }
 
 .small-btn {
@@ -574,11 +744,53 @@ input:focus {
     font-size: 0.95rem;
 }
 
-/* --- HISTORY UI --- */
+/* --- THEME SELECTOR --- */
+.theme-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.theme-selector label {
+    font-size: 0.8rem;
+    color: #8892b0;
+    font-weight: 600;
+}
+
+.theme-selector select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
+
+.theme-selector select:hover {
+    border-color: var(--primary);
+}
+
+.theme-selector select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+/* --- HEADER BUTTONS --- */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.audio-btn,
+.collection-btn,
 .history-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ccc;
@@ -586,14 +798,31 @@ input:focus {
     border-radius: 20px;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
+.audio-btn:hover,
+.collection-btn:hover,
 .history-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border-color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
+
+.audio-btn.muted {
+    color: #ff4444;
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+.audio-btn.active {
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.5);
+    background: rgba(74, 222, 128, 0.1);
+}
+
+/* --- HISTORY UI --- */
 
 .history-content {
     max-width: 500px;
@@ -676,8 +905,774 @@ input:focus {
     opacity: 1;
 }
 
+/* --- ACHIEVEMENT SYSTEM --- */
+.achievements-btn {
+    position: relative;
+}
+
+.achievement-toast {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    width: 320px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: var(--glass-border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    transform: translateX(400px);
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 10001;
+}
+
+.achievement-toast.show {
+    transform: translateX(0);
+}
+
+.achievement-toast.rarity-common {
+    border-color: rgba(156, 163, 175, 0.5);
+}
+
+.achievement-toast.rarity-rare {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+}
+
+.achievement-toast.rarity-epic {
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 10px 40px rgba(168, 85, 247, 0.4);
+}
+
+.achievement-toast.rarity-legendary {
+    border-color: rgba(249, 115, 22, 0.5);
+    box-shadow: 0 10px 40px rgba(249, 115, 22, 0.5);
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 10px 40px rgba(249, 115, 22, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 15px 50px rgba(249, 115, 22, 0.7);
+    }
+}
+
+.toast-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-size: 0.75rem;
+    color: #8892b0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.toast-achievement {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 3px;
+}
+
+.toast-desc {
+    font-size: 0.85rem;
+    color: #ccc;
+    line-height: 1.4;
+}
+
+/* Achievement Modal */
+.achievements-content {
+    max-width: 600px;
+    width: 90%;
+}
+
+.achievements-progress {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#achievement-progress-text {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #8892b0;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    margin: 30px 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.achievement-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.achievement-card.unlocked {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 215, 0, 0.4);
+}
+
+.achievement-card.locked {
+    opacity: 0.4;
+    filter: grayscale(100%);
+}
+
+.achievement-card.unlocked:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+}
+
+.achievement-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.achievement-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.achievement-desc {
+    font-size: 0.7rem;
+    color: #8892b0;
+    line-height: 1.3;
+}
+
+.achievement-card.locked .achievement-icon::after {
+    content: '🔒';
+    position: absolute;
+    font-size: 1.2rem;
+    top: 10px;
+    right: 10px;
+}
+
+/* --- STATS MODAL SYSTEM --- */
+.stats-content {
+    max-width: 600px;
+    width: 90%;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.stat-card {
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+}
+
+.stat-icon {
+    font-size: 2rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #8892b0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- SETTINGS MODAL SYSTEM --- */
+.settings-content {
+    max-width: 450px;
+    width: 90%;
+}
+
+.settings-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.settings-section h3 {
+    margin: 0 0 15px 0;
+    font-size: 1rem;
+    color: #ccc;
+}
+
+.settings-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settings-actions .btn-action {
+    width: 100%;
+    justify-content: center;
+}
+
+.danger-zone {
+    border-color: rgba(255, 68, 68, 0.3);
+    background: rgba(255, 68, 68, 0.05);
+}
+
+.danger-zone h3 {
+    color: #ff6b6b;
+}
+
+.btn-danger {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.3), rgba(255, 68, 68, 0.1));
+    border: 1px solid rgba(255, 68, 68, 0.5);
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.5), rgba(255, 68, 68, 0.2));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+}
+
+.danger-warning {
+    margin: 10px 0 0 0;
+    font-size: 0.75rem;
+    color: #ff6b6b;
+    opacity: 0.7;
+    text-align: center;
+}
+
+/* --- EVENT MODAL SYSTEM --- */
+.event-modal .modal-content {
+    max-width: 500px;
+    padding: 50px 40px;
+}
+
+.event-icon {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.event-desc {
+    text-align: center;
+    line-height: 1.6;
+    color: #ccc;
+    margin: 20px 0 30px 0;
+    font-size: 0.95rem;
+}
+
+.event-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.event-choice-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.event-choice-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.event-choice-btn:hover::before {
+    left: 100%;
+}
+
+.event-choice-btn:hover {
+    transform: translateX(5px);
+    border-color: var(--primary);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+}
+
+.event-choice-btn:active {
+    transform: translateX(3px) scale(0.98);
+}
+
+.event-result {
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #4ade80;
+    animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- RING COLLECTION SYSTEM --- */
+
+/* Header Buttons Container */
+.header-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.collection-btn {
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.collection-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+}
+
+#ring-count {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 800;
+}
+
+/* Ring Celebration Modal */
+.ring-modal .ring-content {
+    background: radial-gradient(circle, rgba(10, 10, 30, 0.95), rgba(5, 5, 15, 0.98));
+    overflow: visible;
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ring-beam {
+    position: absolute;
+    top: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 400px;
+    background: linear-gradient(180deg, transparent 0%, #ffd700 50%, transparent 100%);
+    animation: beamDrop 1.8s ease-out;
+    opacity: 0;
+    box-shadow: 0 0 20px #ffd700;
+}
+
+.ring-display {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ring-icon {
+    font-size: 10rem;
+    animation: ringDrop 2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: inline-block;
+    filter: drop-shadow(0 10px 30px rgba(255, 215, 0, 0.6));
+}
+
+.ring-particles-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.ring-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleBurst 1.5s ease-out forwards;
+}
+
+/* Rarity Title Styles */
+.ring-rarity-title {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    margin: 20px 0 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.rarity-common {
+    color: #9ca3af;
+    text-shadow: 0 0 15px #9ca3af;
+}
+
+.rarity-rare {
+    color: #3b82f6;
+    text-shadow: 0 0 20px #3b82f6, 0 0 40px #3b82f6;
+}
+
+.rarity-epic {
+    color: #a855f7;
+    text-shadow: 0 0 25px #a855f7, 0 0 50px #a855f7;
+}
+
+.rarity-legendary {
+    background: linear-gradient(45deg, #f97316, #ffd700, #f97316);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px #f97316) drop-shadow(0 0 15px #ffd700);
+    animation: legendaryShine 2s ease-in-out infinite;
+}
+
+.rarity-mythic {
+    background: linear-gradient(45deg, #ef4444, #ec4899, #fbbf24, #ef4444);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 35px #ef4444) drop-shadow(0 0 20px #ec4899);
+    animation: mythicGlow 3s ease-in-out infinite;
+}
+
+.ring-stats {
+    text-align: center;
+    margin: 15px 0;
+    color: #ccc;
+    font-size: 0.95rem;
+}
+
+.ring-stats p {
+    margin: 5px 0;
+}
+
+/* Collection Modal */
+.collection-content {
+    max-width: 700px;
+    width: 90%;
+}
+
+.collection-stats {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.stat-item {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ddd;
+}
+
+.stat-item span {
+    color: #ffd700;
+    font-weight: 800;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 20px 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) rgba(0, 0, 0, 0.3);
+}
+
+.collection-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.collection-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.collection-grid::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.ring-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+}
+
+.ring-card:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+/* GLOBAL TOOLTIP STYLES (Portal Pattern) */
+#global-tooltip {
+    position: fixed;
+    /* Fixed relative to viewport */
+    background: rgba(15, 15, 25, 0.98);
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 220px;
+    max-width: 280px;
+    pointer-events: none;
+    /* Ignore mouse events to avoid flickering */
+    z-index: 99999;
+    /* Supreme z-index */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    white-space: normal;
+    text-align: left;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: scale(0.95);
+    visibility: hidden;
+}
+
+.global-tooltip-visible {
+    opacity: 1;
+    transform: scale(1) !important;
+    visibility: visible !important;
+}
+
+/* Tooltip Arrow */
+#global-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+}
+
+/* Arrow Position: Top of tooltip (when tooltip is below) */
+#global-tooltip[data-pos="bottom"]::after {
+    bottom: 100%;
+    /* Point up from top edge */
+    border-bottom-color: inherit;
+    /* Inherit border color from tooltip */
+}
+
+/* Arrow Position: Bottom of tooltip (when tooltip is above) */
+#global-tooltip[data-pos="top"]::after {
+    top: 100%;
+    /* Point down from bottom edge */
+    border-top-color: inherit;
+}
+
+/* Tooltip Content Styles */
+#global-tooltip .tooltip-title {
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+#global-tooltip .tooltip-rarity {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#global-tooltip .tooltip-stats {
+    font-size: 0.8rem;
+    color: #ddd;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+#global-tooltip .tooltip-effects {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-style: italic;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ring-card.common {
+    border-color: #9ca3af;
+}
+
+.ring-card.rare {
+    border-color: #3b82f6;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.ring-card.epic {
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+
+.ring-card.legendary {
+    border-color: #f97316;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+}
+
+.ring-card.mythic {
+    border-color: #ef4444;
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+    animation: mythicCardGlow 3s ease-in-out infinite;
+}
+
+.ring-card .ring-emoji {
+    font-size: 3rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.ring-card .ring-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.ring-card .ring-info {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.collection-empty {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 40px 20px;
+    grid-column: 1 / -1;
+}
+
 @media (max-width: 768px) {
-    .history-btn {
+
+    .history-btn,
+    .collection-btn {
         position: static;
         display: inline-block;
         margin-top: 10px;
@@ -748,5 +1743,126 @@ input:focus {
 
     100% {
         transform: scale(1);
+    }
+}
+
+@keyframes buttonPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 8px 25px rgba(255, 255, 255, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 45px rgba(255, 215, 0, 0.9), 0 10px 30px rgba(255, 255, 255, 0.6);
+    }
+}
+
+/* Ring Drop Animations */
+@keyframes ringDrop {
+    0% {
+        transform: translateY(-300px) rotateY(0deg) rotateZ(0deg) scale(0.3);
+        opacity: 0;
+    }
+
+    40% {
+        transform: translateY(0) rotateY(180deg) rotateZ(0deg) scale(1.3);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translateY(-30px) rotateY(270deg) rotateZ(10deg) scale(1.15);
+    }
+
+    80% {
+        transform: translateY(0) rotateY(360deg) rotateZ(-5deg) scale(1.05);
+    }
+
+    100% {
+        transform: translateY(0) rotateY(360deg) rotateZ(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes beamDrop {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) scaleY(0);
+        transform-origin: top center;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) scaleY(1);
+    }
+}
+
+@keyframes particleBurst {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes legendaryShine {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes mythicGlow {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 35px #ef4444) drop-shadow(0 0 20px #ec4899);
+        background-position: 0% 50%;
+    }
+
+    33% {
+        filter: drop-shadow(0 0 40px #ec4899) drop-shadow(0 0 25px #fbbf24);
+        background-position: 50% 50%;
+    }
+
+    66% {
+        filter: drop-shadow(0 0 45px #fbbf24) drop-shadow(0 0 30px #ef4444);
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes mythicCardGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+    }
+
+    33% {
+        box-shadow: 0 0 30px rgba(236, 72, 153, 0.7);
+    }
+
+    66% {
+        box-shadow: 0 0 35px rgba(251, 191, 36, 0.8);
     }
 }
