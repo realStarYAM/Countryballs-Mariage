@@ -10,7 +10,7 @@ class AudioEngine {
         this.masterGain = null;
         this.isMuted = false;
         this.isInitialized = false;
-        
+
         // Load saved preference
         const saved = localStorage.getItem('audioEnabled');
         this.isMuted = saved === 'false';
@@ -21,7 +21,7 @@ class AudioEngine {
      */
     async init() {
         if (this.isInitialized) return;
-        
+
         try {
             this.context = new (window.AudioContext || window.webkitAudioContext)();
             this.masterGain = this.context.createGain();
@@ -39,21 +39,21 @@ class AudioEngine {
      */
     toggleMute() {
         if (!this.isInitialized) return;
-        
+
         this.isMuted = !this.isMuted;
         this.masterGain.gain.setValueAtTime(
             this.isMuted ? 0 : 0.3,
             this.context.currentTime
         );
-        
+
         // Save preference
         localStorage.setItem('audioEnabled', !this.isMuted);
-        
+
         // Play test sound when unmuting
         if (!this.isMuted) {
             this.playClick();
         }
-        
+
         return !this.isMuted;
     }
 
@@ -62,20 +62,20 @@ class AudioEngine {
      */
     playClick() {
         if (!this.isInitialized || this.isMuted) return;
-        
+
         const now = this.context.currentTime;
         const osc = this.context.createOscillator();
         const gain = this.context.createGain();
-        
+
         osc.connect(gain);
         gain.connect(this.masterGain);
-        
+
         osc.frequency.setValueAtTime(1200, now);
         osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
-        
+
         gain.gain.setValueAtTime(0.1, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-        
+
         osc.start(now);
         osc.stop(now + 0.1);
     }
@@ -85,25 +85,25 @@ class AudioEngine {
      */
     playDiceRoll() {
         if (!this.isInitialized || this.isMuted) return;
-        
+
         const now = this.context.currentTime;
-        
+
         // Create multiple short bursts
         for (let i = 0; i < 8; i++) {
             const startTime = now + (i * 0.04);
             const osc = this.context.createOscillator();
             const gain = this.context.createGain();
-            
+
             osc.connect(gain);
             gain.connect(this.masterGain);
-            
+
             // Random pitch for each burst
             const freq = 200 + Math.random() * 400;
             osc.frequency.setValueAtTime(freq, startTime);
-            
+
             gain.gain.setValueAtTime(0.05, startTime);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.03);
-            
+
             osc.start(startTime);
             osc.stop(startTime + 0.03);
         }
@@ -114,27 +114,27 @@ class AudioEngine {
      */
     playUnion() {
         if (!this.isInitialized || this.isMuted) return;
-        
+
         const now = this.context.currentTime;
-        
+
         // Chord progression (C Major)
         const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
-        
+
         notes.forEach((freq, i) => {
             const osc = this.context.createOscillator();
             const gain = this.context.createGain();
-            
+
             osc.connect(gain);
             gain.connect(this.masterGain);
-            
+
             osc.frequency.setValueAtTime(freq, now);
             osc.type = 'sine';
-            
+
             const startTime = now + (i * 0.1);
             gain.gain.setValueAtTime(0, startTime);
             gain.gain.linearRampToValueAtTime(0.15, startTime + 0.1);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + 1.2);
-            
+
             osc.start(startTime);
             osc.stop(startTime + 1.2);
         });
@@ -145,7 +145,7 @@ class AudioEngine {
      */
     playRingDrop(rarity) {
         if (!this.isInitialized || this.isMuted) return;
-        
+
         const now = this.context.currentTime;
         const configs = {
             COMMON: { freq: 400, duration: 0.2 },
@@ -154,26 +154,26 @@ class AudioEngine {
             LEGENDARY: { freq: 1000, duration: 0.5 },
             MYTHIC: { freq: 1200, duration: 0.6 }
         };
-        
+
         const config = configs[rarity] || configs.COMMON;
-        
+
         // Bell-like sound
         const osc1 = this.context.createOscillator();
         const osc2 = this.context.createOscillator();
         const gain = this.context.createGain();
-        
+
         osc1.connect(gain);
         osc2.connect(gain);
         gain.connect(this.masterGain);
-        
+
         osc1.frequency.setValueAtTime(config.freq, now);
         osc2.frequency.setValueAtTime(config.freq * 2, now); // Octave up
         osc1.type = 'triangle';
         osc2.type = 'sine';
-        
+
         gain.gain.setValueAtTime(0.2, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + config.duration);
-        
+
         osc1.start(now);
         osc2.start(now);
         osc1.stop(now + config.duration);
@@ -185,26 +185,26 @@ class AudioEngine {
      */
     playXPGain() {
         if (!this.isInitialized || this.isMuted) return;
-        
+
         const now = this.context.currentTime;
-        
+
         // Rising arpeggio
         const freqs = [440, 554.37, 659.25, 880]; // A4, C#5, E5, A5
-        
+
         freqs.forEach((freq, i) => {
             const osc = this.context.createOscillator();
             const gain = this.context.createGain();
-            
+
             osc.connect(gain);
             gain.connect(this.masterGain);
-            
+
             const startTime = now + (i * 0.06);
             osc.frequency.setValueAtTime(freq, startTime);
             osc.type = 'square';
-            
+
             gain.gain.setValueAtTime(0.08, startTime);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.15);
-            
+
             osc.start(startTime);
             osc.stop(startTime + 0.15);
         });
@@ -215,9 +215,9 @@ class AudioEngine {
      */
     playLevelUp() {
         if (!this.isInitialized || this.isMuted) return;
-        
+
         const now = this.context.currentTime;
-        
+
         // Victory fanfare
         const melody = [
             { freq: 523.25, time: 0 },    // C5
@@ -225,35 +225,86 @@ class AudioEngine {
             { freq: 783.99, time: 0.3 },   // G5
             { freq: 1046.50, time: 0.5 }   // C6
         ];
-        
+
         melody.forEach(note => {
             const osc = this.context.createOscillator();
             const gain = this.context.createGain();
-            
+
             osc.connect(gain);
             gain.connect(this.masterGain);
-            
+
             const startTime = now + note.time;
             osc.frequency.setValueAtTime(note.freq, startTime);
             osc.type = 'sawtooth';
-            
+
             gain.gain.setValueAtTime(0.12, startTime);
             gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
-            
+
             osc.start(startTime);
             osc.stop(startTime + 0.4);
         });
     }
 
     /**
-     * Background ambient music (subtle lo-fi loop)
+     * Background ambient music (Ethereal Lo-Fi Pad)
      */
     startAmbientMusic() {
-        if (!this.isInitialized || this.isMuted) return;
-        
-        // Simple ambient pad (optional feature)
-        // Can be implemented later with more complex oscillators
-        console.log('🎵 Ambient music system ready (to be implemented)');
+        if (!this.isInitialized || this.isMuted || this.ambientNodes.length > 0) return;
+
+        console.log('🎵 Starting ambient music...');
+        this.ambientNodes = [];
+        const now = this.context.currentTime;
+
+        // Base Drone (Low Sine)
+        this.createAmbientLayer(110, 'sine', 0.05, 0.2); // A2
+        this.createAmbientLayer(164.81, 'sine', 0.03, 0.25); // E3
+
+        // Sparkling textures (High Triangle, drifting)
+        this.createAmbientLayer(554.37, 'triangle', 0.01, 0.1); // C#5
+        this.createAmbientLayer(659.25, 'triangle', 0.01, 0.15); // E5
+    }
+
+    createAmbientLayer(freq, type, vol, lfoRate) {
+        const osc = this.context.createOscillator();
+        const gain = this.context.createGain();
+        const lfo = this.context.createOscillator();
+        const lfoGain = this.context.createGain();
+
+        // Setup Oscillator
+        osc.type = type;
+        osc.frequency.value = freq;
+
+        // Setup LFO for volume modulation
+        lfo.frequency.value = lfoRate; // Hz
+        lfoGain.gain.value = vol * 0.5; // Depth
+
+        // Connections
+        lfo.connect(lfoGain);
+        lfoGain.connect(gain.gain);
+        osc.connect(gain);
+        gain.connect(this.masterGain);
+
+        // Initial Volume
+        gain.gain.setValueAtTime(vol, this.context.currentTime);
+
+        // Start
+        osc.start();
+        lfo.start();
+
+        // Store nodes to stop later
+        this.ambientNodes.push({ osc, gain, lfo, lfoGain });
+    }
+
+    stopAmbientMusic() {
+        this.ambientNodes.forEach(node => {
+            try {
+                // Fade out
+                node.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + 2);
+                node.osc.stop(this.context.currentTime + 2);
+                node.lfo.stop(this.context.currentTime + 2);
+            } catch (e) { }
+        });
+        this.ambientNodes = [];
     }
 
     /**

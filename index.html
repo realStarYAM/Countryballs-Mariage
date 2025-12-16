@@ -39,17 +39,21 @@
 
     <header class="main-header glass-panel">
       <h1>MARIAGE RPG</h1>
-      <p class="subtitle">ÉDITION PREMIUM BETA 7.0</p>
+      <p class="subtitle">ÉDITION PREMIUM BETA 7.1</p>
 
       <!-- HEADER BUTTONS (Below title) -->
       <div class="header-buttons">
         <button id="btn-audio" class="audio-btn" title="Activer/Désactiver le son">🔇 Son</button>
+        <button id="btn-shop" class="shop-btn" title="Boutique">🛒 Boutique</button>
         <button id="btn-stats" class="stats-btn" title="Statistiques">📊 Stats</button>
         <button id="btn-achievements" class="achievements-btn" title="Mes Succès">🏆 <span
             id="achievement-count">0/12</span></button>
         <button id="btn-collection" class="collection-btn" title="Ma Collection">💍 <span
             id="ring-count">0</span></button>
         <button id="btn-history" class="history-btn" title="Voir l'historique">📜 Historique</button>
+        <button id="btn-story" class="story-btn" title="Mode Histoire">📖 Histoire</button>
+        <button id="btn-messages" class="messages-btn" title="Messages">💬 Messages</button>
+        <button id="btn-powers" class="powers-btn" title="Pouvoirs">⚡ Pouvoirs</button>
         <button id="btn-settings" class="settings-btn" title="Paramètres">⚙️</button>
       </div>
 
@@ -60,6 +64,22 @@
           <div class="xp-bar" id="xp-bar"></div>
         </div>
         <span class="xp-text" id="xp-text">0 / 100 XP</span>
+      </div>
+
+      <!-- CREDITS DISPLAY -->
+      <div class="credits-container">
+        <span class="credits-icon">💎</span>
+        <span class="credits-value" id="credits-display">0</span>
+        <span class="credits-label">Crédits</span>
+      </div>
+
+      <!-- POWER DISPLAY -->
+      <div class="power-container">
+        <span class="power-icon">⚡</span>
+        <div class="power-bar-wrapper">
+          <div class="power-bar" id="power-bar"></div>
+        </div>
+        <span class="power-text" id="power-text">0/100</span>
       </div>
 
       <!-- THEME SELECTOR -->
@@ -334,6 +354,89 @@
     </div>
   </dialog>
 
+  <!-- 13. MODAL BOUTIQUE -->
+  <dialog id="modal-shop" class="glass-modal shop-modal">
+    <div class="modal-content shop-content">
+      <div class="shop-header">
+        <h2>🛒 Boutique Premium</h2>
+        <div class="shop-credits-display">
+          <span class="credits-icon">💎</span>
+          <span id="shop-credits">0</span> Crédits
+        </div>
+      </div>
+      <div id="shop-grid" class="shop-grid">
+        <!-- Articles injectés via JS -->
+      </div>
+      <button id="btn-shop-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- 14. MODAL LIVRE -->
+  <dialog id="modal-book" class="glass-modal book-modal">
+    <div class="modal-content book-content">
+      <div class="book-header">
+        <h2 id="book-title">📖 Titre du Livre</h2>
+        <p id="book-author" class="book-author">par Auteur</p>
+      </div>
+      <div id="book-content" class="book-text">
+        <!-- Contenu chargé dynamiquement -->
+      </div>
+      <button id="btn-book-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- 15. MODAL HISTOIRE -->
+  <dialog id="modal-story" class="glass-modal story-modal">
+    <div class="modal-content story-content">
+      <h2>📖 Mode Histoire</h2>
+      <div id="story-list" class="story-list">
+        <!-- Liste des chapitres -->
+      </div>
+      <div id="story-reader" class="story-reader" style="display: none;">
+        <h3 id="chapter-title"></h3>
+        <div id="chapter-content" class="chapter-content"></div>
+        <div class="chapter-nav">
+          <button id="btn-prev-chapter" class="btn-action small-btn">⬅️ Précédent</button>
+          <button id="btn-back-to-list" class="btn-action small-btn">📚 Chapitres</button>
+          <button id="btn-next-chapter" class="btn-action small-btn">Suivant ➡️</button>
+        </div>
+      </div>
+      <button id="btn-story-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
+  <!-- 16. MODAL MESSAGES -->
+  <dialog id="modal-messages" class="glass-modal messages-modal">
+    <div class="modal-content messages-content">
+      <h2>💬 Messages</h2>
+      <div id="messages-container" class="messages-container">
+        <!-- Messages dynamiques -->
+      </div>
+      <div class="message-input-area">
+        <div id="emoji-picker" class="emoji-picker"></div>
+        <div class="message-input-row">
+          <input type="text" id="message-input" placeholder="Écris un message..." maxlength="200">
+          <button id="btn-send-message" class="btn-send">📤</button>
+        </div>
+      </div>
+      <div class="messages-actions">
+        <button id="btn-clear-messages" class="btn-text">🗑️ Effacer</button>
+        <button id="btn-messages-close" class="btn-action small-btn">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 17. MODAL POUVOIRS -->
+  <dialog id="modal-powers" class="glass-modal powers-modal">
+    <div class="modal-content powers-content">
+      <h2>⚡ Pouvoirs</h2>
+      <div id="powers-grid" class="powers-grid">
+        <!-- Pouvoirs dynamiques -->
+      </div>
+      <button id="btn-powers-close" class="btn-action small-btn">Fermer</button>
+    </div>
+  </dialog>
+
   <!-- SCRIPTS -->
   <script src="audio.js"></script>
   <script src="events.js"></script>
@@ -343,6 +446,12 @@
   <script src="save-manager.js"></script>
   <script src="choices.js"></script>
   <script src="scenario.js"></script>
+  <script src="scenario-manager.js"></script>
+  <script src="shop.js"></script>
+  <script src="books.js"></script>
+  <script src="story.js"></script>
+  <script src="messages.js"></script>
+  <script src="power.js"></script>
   <script src="game.js"></script>
 </body>
 

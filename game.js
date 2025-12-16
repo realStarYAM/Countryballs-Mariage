@@ -68,7 +68,9 @@ const state = {
     level: 1,
     // Ring Collection
     rings: [],
-    totalRings: 0
+    totalRings: 0,
+    // Credits System
+    credits: 0
 };
 
 // --- DOM ELEMENTS ---
@@ -107,6 +109,7 @@ const dom = {
     // Overlays
     flash: document.getElementById('flash-overlay'),
     canvas: document.getElementById('confetti-canvas'),
+    loadingText: document.getElementById('loading-text'),
     heartsContainer: document.getElementById('particles-hearts'),
 
     // History
@@ -195,6 +198,7 @@ const dom = {
 window.addEventListener('DOMContentLoaded', async () => {
     loadTheme(); // Load saved theme first
     loadXP(); // Load saved XP
+    loadCredits(); // Load saved credits
     setupUI();
     bindEvents();
 
@@ -221,12 +225,18 @@ async function loadAssets() {
     const int = setInterval(() => {
         p = Math.min(p + 5, 90);
         dom.loaderBar.style.width = p + "%";
+
+        // Scenario Loading Text
+        if (window.scenarioManager && p % 20 === 0) {
+            if (dom.loadingText) dom.loadingText.innerText = window.scenarioManager.getLoadingText();
+        }
     }, 50);
 
     // On attend tout (block pas si erreur)
     await Promise.allSettled(checks);
     clearInterval(int);
     dom.loaderBar.style.width = "100%";
+    if (dom.loadingText) dom.loadingText.innerText = "Lancement...";
     await wait(400);
 }
 
@@ -263,6 +273,7 @@ function bindEvents() {
     const initAudio = async () => {
         if (!audioInitialized && window.audioEngine) {
             await window.audioEngine.init();
+            window.audioEngine.startAmbientMusic(); // Start ambient loop
             audioInitialized = true;
         }
     };
@@ -472,13 +483,26 @@ function calcScore() {
         bonus += 15;
     }
 
-    // MALUS: Pays en conflit (-20%)
+    // MALUS: Pays en conflit (-20%) - sauf si Calm Down actif
     if (areInConflict(c1, c2)) {
-        bonus -= 20;
+        if (window.powerManager?.isCalmDownActive()) {
+            dom.statusMsg.innerText = "😌 Calm Down actif: malus annulé !";
+        } else {
+            bonus -= 20;
+        }
+    }
+
+    // BONUS: Power Boost Love actif
+    const powerBoost = window.powerManager?.consumeBoostLove() || 0;
+    if (powerBoost > 0) {
+        bonus += powerBoost;
+        dom.statusMsg.innerText = `💕 Boost Love: +${powerBoost}% !`;
     }
 
     state.score = Math.max(30, Math.min(100, base + bonus)); // Clamp 30-100%
-    dom.statusMsg.innerText = "Compatibilité calculée.";
+    if (!powerBoost && !window.powerManager?.isCalmDownActive()) {
+        dom.statusMsg.innerText = "Compatibilité calculée.";
+    }
 
     updateRing(state.score);
 }
@@ -587,10 +611,32 @@ function saveMarriage() {
         state.fusion ? `${state.player.country}|${state.partner.country}` : null
     );
 
+    // --- CREDITS GAIN ---
+    let creditsGain = 25; // Base credits
+    if (state.score >= 100) creditsGain += 25; // Perfect match bonus
+    else if (state.score >= 80) creditsGain += 10; // High compat bonus
+    if (state.isFusion) creditsGain += 15; // Fusion bonus
+
+    // Power: Golden Emoji double les crédits
+    if (window.powerManager?.consumeGoldenEmoji()) {
+        creditsGain *= 2;
+        window.powerManager.showToast('🌟 Golden Emoji: Crédits doublés !', 'success');
+    }
+    addCredits(creditsGain);
+
     // --- XP GAIN ---
     let xpGain = XP_PER_MARRIAGE;
+    // Apply shop XP multiplier
+    const xpMult = window.shopManager?.getXPMultiplier() || 1;
+    xpGain = Math.floor(xpGain * xpMult);
     if (state.isFusion) xpGain += 25; // Bonus for Fusion!
     addXP(xpGain);
+
+    // --- POWER GAIN ---
+    let powerGain = 10; // Base power per union
+    if (state.score >= 80) powerGain += 15; // High compat bonus
+    if (state.isFusion) powerGain += 10; // Fusion bonus
+    window.powerManager?.addPower(powerGain);
 }
 
 function openHistory() {
@@ -782,11 +828,20 @@ function addXP(amount) {
         xpNeeded = getXPForLevel(state.level);
         leveledUp = true;
         console.log(`🎉 Level Up! Now Level ${state.level}`);
+
+        // CREDITS BONUS on level up!
+        addCredits(50);
     }
 
     // AUDIO: Level up fanfare
     if (leveledUp) {
         window.audioEngine?.playLevelUp();
+
+        // CHECK FOR SCENARIO
+        if (window.scenarioManager?.checkProgression(state.level)) {
+            // Priority to scenario
+            return;
+        }
 
         // CHECK FOR EVENT TRIGGER
         checkForEvent();
@@ -806,6 +861,88 @@ function updateXPUI() {
     dom.levelBadge.innerText = `Niv. ${state.level}`;
     dom.xpBar.style.width = `${percent}%`;
     dom.xpText.innerText = `${state.xp} / ${xpNeeded} XP`;
+}
+
+// =====================
+// CREDITS SYSTEM
+// =====================
+
+/**
+ * Load credits from localStorage on init.
+ */
+function loadCredits() {
+    const saved = localStorage.getItem('playerCredits');
+    if (saved) {
+        state.credits = parseInt(saved, 10) || 0;
+    }
+    updateCreditsDisplay();
+}
+
+/**
+ * Save current credits to localStorage.
+ */
+function saveCredits() {
+    localStorage.setItem('playerCredits', state.credits.toString());
+}
+
+/**
+ * Add credits and show animation.
+ */
+function addCredits(amount) {
+    if (amount <= 0) return;
+
+    state.credits += amount;
+    saveCredits();
+    updateCreditsDisplay();
+
+    // Show floating +credits animation
+    showCreditsGain(amount);
+
+    // Update shop display if open
+    window.shopManager?.updateCreditsDisplay();
+
+    console.log(`+${amount} crédits ! Total: ${state.credits}`);
+}
+
+/**
+ * Spend credits (returns true if successful).
+ */
+function spendCredits(amount) {
+    if (amount <= 0) return true;
+    if (state.credits < amount) return false;
+
+    state.credits -= amount;
+    saveCredits();
+    updateCreditsDisplay();
+
+    // Update shop display if open
+    window.shopManager?.updateCreditsDisplay();
+
+    console.log(`-${amount} crédits ! Reste: ${state.credits}`);
+    return true;
+}
+
+/**
+ * Update the credits display in the UI.
+ */
+function updateCreditsDisplay() {
+    const creditsEl = document.getElementById('credits-display');
+    if (creditsEl) {
+        creditsEl.textContent = state.credits;
+    }
+}
+
+/**
+ * Show floating credits gain animation.
+ */
+function showCreditsGain(amount) {
+    const el = document.createElement('div');
+    el.className = 'credits-gain';
+    el.innerHTML = `+${amount} 💎`;
+    document.body.appendChild(el);
+
+    // Remove after animation
+    setTimeout(() => el.remove(), 1500);
 }
 
 // =====================

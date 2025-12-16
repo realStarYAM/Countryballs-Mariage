@@ -1,0 +1,128 @@
+═══════════════════════════════════════════════════════════════════
+                    MANUEL DU MARIAGE RPG
+                     📚 Édition du Maître 📚
+═══════════════════════════════════════════════════════════════════
+
+Félicitations, Maître Célébrant Niveau 10 !
+Vous avez prouvé votre valeur. Voici les secrets ultimes...
+
+═══════════════════════════════════════════════════════════════════
+                    ARCHITECTURE DU DESTIN
+═══════════════════════════════════════════════════════════════════
+
+📊 Le Calcul de Compatibilité Décodé
+
+La formule exacte utilisée par les anciens :
+
+    BASE = Hash(Pays1 + Pays2) mod 31 + 40
+    
+    BONUS:
+      + 10% si même continent
+      + 15% si pays voisins
+      - 20% si en conflit
+    
+    FINAL = clamp(BASE + BONUS, 30, 100)
+
+Le hash garantit une compatibilité stable et reproductible.
+
+═══════════════════════════════════════════════════════════════════
+                    ÉCONOMIE DES CRÉDITS
+═══════════════════════════════════════════════════════════════════
+
+💰 Guide d'Accumulation Optimale
+
+Revenus par action :
+  • Union standard : +25 crédits
+  • Compatibilité >80% : +10 bonus
+  • Compatibilité 100% : +25 bonus
+  • Montée de niveau : +50 crédits
+
+💡 Stratégie : Enchaînez les fusions pour maximiser les gains !
+
+═══════════════════════════════════════════════════════════════════
+                    SYSTÈME DE RARETÉ
+═══════════════════════════════════════════════════════════════════
+
+🎲 Probabilités des Anneaux
+
+Sans fusion (base) :
+  • 🤍 Commun    : 60%
+  • 💙 Rare      : 25%
+  • 💜 Épique    : 10%
+  • 🧡 Légendaire : 4%
+  • ❤️ Mythique  : 1%
+
+Bonus de compatibilité :
+  • 90%+ compatibilité : -20 au jet (meilleures chances)
+  • 80%+ compatibilité : -10 au jet
+
+Avec FUSION :
+  • 🧡 Légendaire : 80%
+  • ❤️ Mythique  : 20%
+
+═══════════════════════════════════════════════════════════════════
+                    PROGRESSION OPTIMALE
+═══════════════════════════════════════════════════════════════════
+
+📈 XP Requis par Niveau
+
+Le système utilise une progression linéaire :
+
+    XP_requis = 100 × niveau_actuel
+    
+    Niveau 1→2  : 100 XP
+    Niveau 2→3  : 200 XP
+    Niveau 5→6  : 500 XP
+    Niveau 10→11: 1000 XP
+
+💡 Utilisez les multiplicateurs XP de la boutique !
+   Un x2 pendant 3 unions = économie de temps massive.
+
+═══════════════════════════════════════════════════════════════════
+                    SUCCÈS SECRETS
+═══════════════════════════════════════════════════════════════════
+
+🏆 Débloquez ces achievements cachés :
+
+  • "Globetrotter" : Mariez tous les continents
+  • "Collectionneur Fou" : 100 anneaux
+  • "Arc-en-ciel" : Un anneau de chaque rareté
+  • "Destin Manifeste" : 10 fusions réalisées
+  • "Millionnaire" : Accumulez 10000 crédits
+
+═══════════════════════════════════════════════════════════════════
+                    CONSEILS DE MAÎTRE
+═══════════════════════════════════════════════════════════════════
+
+🎓 Sagesse Accumulée
+
+  1. Ne gaspillez pas vos crédits sur les petits bonus.
+     Économisez pour les multiplicateurs x2.
+     
+  2. Les thèmes premium ne sont pas que cosmétiques.
+     Certains croient qu'ils influencent la chance...
+     
+  3. Gardez une trace de vos fusions dans l'historique.
+     Patterns = Savoir = Pouvoir.
+     
+  4. Le timing existe. Certains moments sont propices.
+     Observez le comportement du système...
+
+═══════════════════════════════════════════════════════════════════
+                    LE DERNIER SECRET
+═══════════════════════════════════════════════════════════════════
+
+🌟 Il est dit que celui qui collectionne TOUS les anneaux 
+   Mythiques débloquera une surprise spéciale...
+
+   Mais ce n'est qu'une légende.
+   
+   ...N'est-ce pas ?
+
+═══════════════════════════════════════════════════════════════════
+
+                "Le vrai mariage est celui des esprits."
+                
+                            ~ Les Anciens ~
+
+═══════════════════════════════════════════════════════════════════
